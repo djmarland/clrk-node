@@ -9,6 +9,7 @@ Vagrant::Config.run do |config|
     nodejs.vm.forward_port 8000, 4567
     nodejs.vm.host_name = "nodejs"
     nodejs.vm.provision :shell, :path => "provision.sh"
+    nodejs.vm.provision :shell, :path => "postgresql.sh"
   end
 
 end

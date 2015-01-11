@@ -8,7 +8,13 @@ var express = require('express'),
     routes = require('./routes/home'),
     users = require('./routes/users');
 
-var app = express();
+
+Sequelize = require('sequelize');
+var db = new Sequelize('postgres://root:root@localhost:5432/root');
+
+app = express();
+app.set('db', db);
+
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
