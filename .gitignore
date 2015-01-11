@@ -1,0 +1,3 @@
+.vagrant
+/app/node_modules
+.idea
