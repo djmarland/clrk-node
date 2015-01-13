@@ -1,77 +1,40 @@
-var express = require('express'),
-    exphbs  = require('express-handlebars'),
-    path = require('path'),
-    favicon = require('serve-favicon'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    routes = require('./routes/home'),
-    users = require('./routes/users');
+"use strict";
 
+var fs = require('fs');
+var express = require('express');
+var favicon = require('serve-favicon');
+var passport = require('passport');
+var config = require('config/config');
 
+var app = express();
+/*
+// Setup database
 Sequelize = require('sequelize');
 var db = new Sequelize('postgres://root:root@localhost:5432/root');
 
 app = express();
 app.set('db', db);
+*/
+
+// Setup view renderer (handlebars)
 
 
-// view engine setup
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'handlebars');
 
-// uncomment after placing your favicon in /public
+
+// Setup favicon location (to prevent the logs filling with 404s)
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+// Bootstrap models
+require('models');
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+// Bootstrap passport config
+require('config/passport')(passport, config);
 
-// error handlers
+// Bootstrap application settings
+require('config/express')(app, passport);
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
-
+// Bootstrap routes
+require('./config/routes')(app, passport);
 
 module.exports = app;
-
-/*
-var server = app.listen(8000, function () {
-
-    var host = server.address().address
-    var port = server.address().port
-
-    console.log('Example app listening at http://%s:%s', host, port)
-
-})*/

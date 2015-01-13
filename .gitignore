@@ -1,3 +1,4 @@
 .vagrant
 /app/node_modules
 .idea
+/app/config/env/env.js

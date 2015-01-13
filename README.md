@@ -29,7 +29,7 @@ sudo npm install --no-bin-links
 sudo npm install -g nodemon
 
 Start server
-nodemon -L
+./bin/start
 
 DEBUG=app ./bin/www
 
