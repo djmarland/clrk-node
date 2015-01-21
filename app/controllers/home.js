@@ -9,21 +9,16 @@ var models = require('models');
 
 
 exports.indexAction = function (req, res) {
-    models.customer.findAndCountAll({
-        where: ["id > ?", 0],
-        offset: 0,
-        limit: 10
-    })
+    models.customer.goFind()
     .then(function(result) {
-        var total = result.count;
-        var customers = result.rows;
-
+            console.log('done ok');
         res.render('home/index', {
-                "total" : total,
-                "customers" : customers
-            }
-        );
-
+            "total" : result.count,
+            "customers" : result.rows
+        });
+    })
+    .catch(function(e) {
+        console.log(e.message);
+            res.send('killed');
     });
-
 };
