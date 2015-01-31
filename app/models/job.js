@@ -1,0 +1,53 @@
+"use strict";
+
+module.exports = function(sequelize, DataTypes) {
+    var Job = sequelize.define(
+        "job",
+        {
+            title: {
+                type: DataTypes.STRING,
+                field: "title"
+            },
+            address: {
+                type: DataTypes.STRING,
+                field: "address"
+            },
+            postcode: {
+                type: DataTypes.STRING,
+                field: "postcode"
+            },
+            customerId : {
+                type: DataTypes.INTEGER,
+                references : "customers",
+                referencesKey : "id",
+                field: "customerId"
+            }
+        },
+        {
+            classMethods: {
+                associate: function (models) {
+                    Job.belongsTo(models.customer, { foreignKey: "customerId" })
+                }
+            }
+        }
+    );
+
+    Job.goFind = function() {
+        return new sequelize.Promise(function(resolve, reject) {
+            var models = require('models');
+            Job.findAndCountAll({
+                where: ["job.id > ?", 0],
+                offset: 0,
+                limit: 10,
+                include: [ models.customer ]
+            })
+            .then(function(result) {
+                resolve(result);
+            }).catch(function(e) {
+                reject(Error("It died " + e.message));
+            });
+        });
+    };
+
+    return Job;
+};

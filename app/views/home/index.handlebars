@@ -1,6 +1,6 @@
 <h1>{{ title }}</h1>
 
-<p>Total: {{ total }}</p>
+<p>Total: {{ customers_count }}</p>
 
 <ul>
     {{#each customers}}
@@ -8,3 +8,11 @@
     {{/each}}
 </ul>
 
+<h2>Jobs</h2>
+<p>Total: {{ jobs_count }}</p>
+
+<ul>
+    {{#each jobs}}
+    <li>{{> job this }}</li>
+    {{/each}}
+</ul>

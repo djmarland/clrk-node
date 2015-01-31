@@ -6,7 +6,8 @@
 
 
 // setup the controller dependencies
-var home = require('controllers/home');
+var home        = require('controllers/home');
+var customers   = require('controllers/customers');
 
 module.exports = function (app, passport) {
 
@@ -16,6 +17,11 @@ module.exports = function (app, passport) {
      */
     app.get('/', home.indexAction);
 
+    /**
+     * Customers routes
+     */
+    app.get('/customers', customers.listAction);
+    app.get('/customers', customers.listAction);
 
     /**
      * Error handling

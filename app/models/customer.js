@@ -1,22 +1,30 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-    var schema = {
-        name: {
-            type: DataTypes.STRING,
-            field: 'name'
-        }
-    };
-    var options = {
-        freezeTableName: true, // Model tableName will be the same as the model name
-        classMethods: {
-            associate: function(models) {
-
+    var Customer = sequelize.define(
+        "customer",
+        {
+            name: {
+                type: DataTypes.STRING,
+                field: 'name'
+            },
+            address: {
+                type: DataTypes.STRING,
+                field: 'address'
+            },
+            postcode: {
+                type: DataTypes.STRING,
+                field: 'postcode'
+            }
+        },
+        {
+            classMethods: {
+                associate: function (models) {
+                    Customer.hasMany(models.job, { foreignKey: 'customerId' });
+                }
             }
         }
-    };
-    var Customer = sequelize.define("customer", schema, options);
-
+    );
 
     Customer.goFind = function() {
         return new sequelize.Promise(function(resolve, reject) {

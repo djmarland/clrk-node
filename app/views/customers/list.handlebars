@@ -1,0 +1,9 @@
+<h1>Customers</h1>
+
+<p>Total: {{ customers_count }}</p>
+
+<ul>
+    {{#each customers}}
+    <li>{{> customer this }}</li>
+    {{/each}}
+</ul>
