@@ -49,5 +49,23 @@ module.exports = function(sequelize, DataTypes) {
         });
     };
 
+    Job.findLatestByCustomer = function(customer) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Job.findAndCountAll({
+                where: ["\"customerId\" = ?", customer.id],
+                offset: 0,
+                limit: 10,
+                order: '\"updatedAt\" DESC'
+            })
+            .then(function(result) {
+                resolve(result);
+            }).catch(function(e) {
+                reject(Error("It died " + e.message));
+            });
+        });
+    };
+
+
+
     return Job;
 };

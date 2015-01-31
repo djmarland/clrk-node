@@ -1,0 +1,16 @@
+<h1>{{ customer.name }}</h1>
+
+<h2>Address:</h2>
+<p>{{ customer.address }}</p>
+
+<h2>Postcode</h2>
+<p>{{ customer.postcode }}</p>
+
+<h2>Jobs</h2>
+<p>Total: {{ jobs_count }}</p>
+
+<ul>
+    {{#each jobs}}
+    <li>{{> job this }}</li>
+    {{/each}}
+</ul>

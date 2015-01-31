@@ -1,5 +1,7 @@
 
 <div>
     <p>Title: {{ title }}</p>
+    {{#if customer}}
     {{> customer customer }}
+    {{/if}}
 </div>

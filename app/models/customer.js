@@ -26,6 +26,20 @@ module.exports = function(sequelize, DataTypes) {
         }
     );
 
+    Customer.findById = function(id) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.find({
+                where: ["id = ?", id],
+                limit: 1
+            })
+            .then(function(result) {
+                resolve(result);
+            }).catch(function(e) {
+                reject(Error('It died ' + e.message));
+            });
+        });
+    };
+
     Customer.goFind = function() {
         return new sequelize.Promise(function(resolve, reject) {
             Customer.findAndCountAll({

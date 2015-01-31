@@ -8,7 +8,7 @@
 var models = require('models');
 
 
-exports.indexAction = function (req, res) {
+exports.indexAction = function (request, response) {
     var results = {
             customers: null,
             customers_count : null,
@@ -27,11 +27,11 @@ exports.indexAction = function (req, res) {
         results.jobs = result.rows;
         results.jobs_count = result.count;
 
-        res.render('home/index', results);
+            response.render('home/index', results);
     })
     .catch(function(e) {
         console.log(e.message);
-            res.send('killed');
+        response.send('killed');
     }).finally(function() {
 
     });

@@ -8,7 +8,7 @@
 var models = require('models');
 
 
-exports.listAction = function (req, res) {
+exports.listAction = function (request, response) {
     var results = {
         customers: null,
         customers_count : null
@@ -21,6 +21,26 @@ exports.listAction = function (req, res) {
         .catch(function(e) {
             console.log(e.message);
         }).finally(function() {
-            res.render('customers/list', results);
+            response.render('customers/list', results);
         });
+};
+
+exports.showAction = function (request, response) {
+    var data = {
+        customer: request.customer
+    };
+    models.job.findLatestByCustomer(data.customer)
+    .then(function(result) {
+        data.jobs = result.rows;
+        data.jobs_count = result.count;
+    })
+    .catch(function(e) {
+        console.log(e.message);
+    }).finally(function() {
+        response.render('customers/show', data);
+    });
+};
+
+exports.newAction = function (request, response) {
+    response.render('customers/new');
 };
