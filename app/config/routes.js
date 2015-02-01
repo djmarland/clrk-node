@@ -22,9 +22,9 @@ module.exports = function (app, passport) {
     /**
      * Customers routes
      */
-    app.get('/customers', customers.listAction);
+    app.get('/customers.:format?', customers.listAction);
     app.get('/customers/new', customers.newAction);
-    app.get('/customers/:customer_key', customers.showAction);
+    app.get('/customers/:customer_key.:format?', customers.showAction);
 
     app.post('/customers/new', customers.createAction);
 
@@ -43,7 +43,20 @@ module.exports = function (app, passport) {
             .catch(next);
     });
 
+    app.param('format', function(request, response, next, format) {
+        if (format &&
+            format != 'json') {
+            var err = new Error;
+            err.message = 'No such format';
+            err.status = 404;
+            return next(err);
+        }
+        request.format = format;
+        return next();
+    });
+
     // assume 404 since no middleware responded
+    // this is for when no routes match (so no format)
     app.use(function (request, response, next) {
         response.status(404).render('404', {
             url: request.originalUrl,
@@ -56,20 +69,25 @@ module.exports = function (app, passport) {
      */
     app.use(function (err, request, response, next) {
         // error page
-        if (err.status === 404) {
-            response.status(404).render('404', {
-                message: err.message
-            });
-        } else if (err.status === 403) {
-            response.status(403).render('403', {
-                message: err.message
-            });
+        var data = {
+            status: err.status || 500,
+            message: err.message || 'Error',
+            stack: err.stack || null
+        };
+
+        var acceptableStatuses = [
+            403, 404, 500
+        ]
+
+        if (acceptableStatuses.indexOf(data.status) === -1) {
+            data.status = 500;
+        }
+
+        response.status(data.status);
+        if (request.format == 'json') {
+            response.json(data);
         } else {
-            response.status(500).render('500', {
-                stack: err.stack,
-                message : err.message
-            });
-            console.error(err.stack);
+            response.render(data.status.toString(), data);
         }
     });
 

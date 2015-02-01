@@ -34,8 +34,8 @@ module.exports = function(sequelize, DataTypes) {
                     Customer.hasMany(models.job, { foreignKey: 'customerId' });
                 }
             },
-            instanceMethods : {
-                getUrl: function() {
+            getterMethods: {
+                url : function() {
                     return '/customers/' + this.id;
                 }
             }

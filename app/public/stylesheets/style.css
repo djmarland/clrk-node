@@ -1,3 +1,7 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
   padding: 50px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -5,4 +9,32 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+input, textarea {
+  border: none;
+  border-bottom: solid 1px #999;
+  width: 100%;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: transparent;
+}
+
+.input-wrap textarea {
+  resize: none;
+  height: 80px;
+}
+
+.input-head {
+  font-size: 32px;
+}
+.input-wrap {
+  position: relative;
+  margin-bottom: 24px;
+}
+.input-label {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-size: 14px;
+  color: #999;
 }
