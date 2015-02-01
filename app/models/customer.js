@@ -4,9 +4,20 @@ module.exports = function(sequelize, DataTypes) {
     var Customer = sequelize.define(
         "customer",
         {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                primaryKey: true
+            },
             name: {
                 type: DataTypes.STRING,
-                field: 'name'
+                field: 'name',
+                allowNull : false,
+                validate: {
+                    notEmpty: {
+                        msg: 'Customer must have a name'
+                    }
+                }
             },
             address: {
                 type: DataTypes.STRING,
@@ -22,6 +33,11 @@ module.exports = function(sequelize, DataTypes) {
                 associate: function (models) {
                     Customer.hasMany(models.job, { foreignKey: 'customerId' });
                 }
+            },
+            instanceMethods : {
+                getUrl: function() {
+                    return '/customers/' + this.id;
+                }
             }
         }
     );
@@ -35,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
             .then(function(result) {
                 resolve(result);
             }).catch(function(e) {
-                reject(Error('It died ' + e.message));
+                reject(e);
             });
         });
     };
@@ -43,17 +59,27 @@ module.exports = function(sequelize, DataTypes) {
     Customer.goFind = function() {
         return new sequelize.Promise(function(resolve, reject) {
             Customer.findAndCountAll({
-                where: ["id > ?", 0],
                 offset: 0,
                 limit: 10
             })
             .then(function(result) {
                 resolve(result);
             }).catch(function(e) {
-                reject(Error('It died ' + e.message));
+                reject(e);
             });
         });
     };
+
+    Customer.new = function(data) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.create(data)
+                .then(function(customer) {
+                    resolve(customer);
+                }).catch(function(e) {
+                    reject(e)
+                });
+        });
+    }
 
     return Customer;
 };

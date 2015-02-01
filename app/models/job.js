@@ -4,6 +4,11 @@ module.exports = function(sequelize, DataTypes) {
     var Job = sequelize.define(
         "job",
         {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                primaryKey: true
+            },
             title: {
                 type: DataTypes.STRING,
                 field: "title"

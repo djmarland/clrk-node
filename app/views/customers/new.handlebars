@@ -1,1 +1,29 @@
 <h1>New Customer</h1>
+
+{{> generic/errors errors }}
+
+<form action="/customers/new" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}" />
+    <fieldset>
+        <legend>Basic information </legend>
+        <div>
+            <label for="form-name">Name:
+            <input type="text" name="name" id="form-name" />
+            </label>
+        </div>
+        <div>
+            <label for="form-name">Address:
+                <textarea name="address" id="form-address"></textarea>
+            </label>
+        </div>
+        <div>
+            <label for="form-postcode">Postcode:
+                <input type="text" name="postcode" id="form-postcode" />
+            </label>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </fieldset>
+
+</form>
