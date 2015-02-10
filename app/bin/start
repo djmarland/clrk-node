@@ -1,2 +1,2 @@
 #!/bin/sh
-NODE_PATH=. NODE_ENV=development nodemon -L
+NODE_PATH=. NODE_ENV=development nodemon -V

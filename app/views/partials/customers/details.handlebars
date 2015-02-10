@@ -1,0 +1,24 @@
+<div class="customer-form">
+    <form action="{{ action }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}" />
+        <div class="input-wrap {{ validation_errors.name_class }}">
+            <label class="input-label" for="form-name">Name</label>
+            <input class="input-head" type="text" name="name" id="form-name" value="{{ name }}" />
+        {{#if validation_errors.name }}
+            <p>{{ validation_errors.name }}</p>
+        {{/if}}
+        </div>
+        <div class="input-wrap">
+            <label class="input-label" for="form-address">Address</label>
+            <textarea name="address" id="form-address">{{ address }}</textarea>
+        </div>
+        <div class="input-wrap">
+            <label class="input-label" for="form-postcode">Postcode</label>
+            <input type="text" name="postcode" id="form-postcode" value="{{ postcode }}" />
+
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>

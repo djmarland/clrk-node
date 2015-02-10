@@ -35,12 +35,24 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             getterMethods: {
+                key : function() {
+                    // ids haven't been converted yet
+                    return this.id;
+                },
+                key_print : function() {
+                    return this.key.toString().toUpperCase();
+                },
                 url : function() {
-                    return '/customers/' + this.id;
+                    return '/customers/' + this.key;
                 }
             }
         }
     );
+
+    Customer.findByKey = function(key) {
+        // keys haven't been converted yet
+        return Customer.findById(key);
+    };
 
     Customer.findById = function(id) {
         return new sequelize.Promise(function(resolve, reject) {
@@ -60,7 +72,8 @@ module.exports = function(sequelize, DataTypes) {
         return new sequelize.Promise(function(resolve, reject) {
             Customer.findAndCountAll({
                 offset: 0,
-                limit: 10
+                limit: 10,
+                order: 'id ASC'
             })
             .then(function(result) {
                 resolve(result);
@@ -79,7 +92,7 @@ module.exports = function(sequelize, DataTypes) {
                     reject(e)
                 });
         });
-    }
+    };
 
     return Customer;
 };

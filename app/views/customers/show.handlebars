@@ -1,11 +1,23 @@
-<h1>{{ customer.name }}</h1>
 
-<h2>Address:</h2>
-<p>{{ customer.address }}</p>
 
-<h2>Postcode</h2>
-<p>{{ customer.postcode }}</p>
+<div style="float:right;width: 39%">
+    <p>Customer reference: {{ customer.key_print }}</p>
+    <p>Last updated: {{ customer.updatedAt }}</p></div>
 
+<div style="float:left;width: 60%">
+{{#if has_edit_rights}}
+{{> customers/details customer_form }}{{!-- partial must NOT have indentation --}}
+{{else}}
+    <h1>{{ customer.name }}</h1>
+    <h2>Address:</h2>
+    <p>{{ customer.address }}</p>
+
+    <h2>Postcode</h2>
+    <p>{{ customer.postcode }}</p>
+{{/if}}
+</div>
+
+<div style="clear:both">
 <h2>Jobs</h2>
 <p>Total: {{ jobs_count }}</p>
 
@@ -14,3 +26,4 @@
     <li>{{> job this }}</li>
     {{/each}}
 </ul>
+</div>

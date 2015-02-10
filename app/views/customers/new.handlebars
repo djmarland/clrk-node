@@ -1,24 +1,3 @@
 <h1>New Customer</h1>
 
-{{> generic/errors validation_errors }}
-<form action="/customers/new" method="post">
-    <input type="hidden" name="_csrf" value="{{ csrf_token }}" />
-
-        <div class="input-wrap">
-            <label class="input-label" for="form-name">Name</label>
-            <input class="input-head" type="text" name="name" id="form-name" value="{{ body.name }}" />
-        </div>
-        <div class="input-wrap">
-            <label class="input-label" for="form-address">Address</label>
-            <textarea name="address" id="form-address">{{ body.address }}</textarea>
-        </div>
-        <div class="input-wrap">
-            <label class="input-label" for="form-postcode">Postcode</label>
-            <input type="text" name="postcode" id="form-postcode" value="{{ body.postcode }}" />
-
-        </div>
-        <div>
-            <button type="submit">Save</button>
-        </div>
-
-</form>
+{{> customers/details customer_form }}

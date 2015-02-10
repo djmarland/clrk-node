@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+p {
+  margin-top: 0;
+}
+
 body {
   padding: 50px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -11,17 +15,23 @@ a {
   color: #00B7FF;
 }
 
+li a {
+  display: block;
+}
+
 input, textarea {
   border: none;
   border-bottom: solid 1px #999;
   width: 100%;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: transparent;
+  padding-right: 64px;
 }
 
 .input-wrap textarea {
   resize: none;
   height: 80px;
+  overflow: auto;
 }
 
 .input-head {
@@ -37,4 +47,62 @@ input, textarea {
   right: 4px;
   font-size: 14px;
   color: #999;
+}
+
+.customer-form {
+  max-width: 500px;
+}
+
+::-ms-clear {
+  width : 0;
+  height: 0;
+}
+
+.messages {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  list-style: none;
+  margin: 0 0 24px 0;
+  padding:0;
+}
+.messages__msg {;
+  border-radius: 4px;
+  padding: 12px 18px;
+  border: solid 1px;
+  margin-bottom: 6px;
+}
+.messages__msg:before {
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+.messages__msg--info {
+  background: #ccccff;
+  color: #4444cc;
+  border-color: #4444cc;
+}
+.messages__msg--info:before {
+  content: 'i';
+}
+
+.messages__msg--error,
+.input-wrap.error{
+  background: #ffcccc;
+  color: #ff4444;
+  border-color: #ff4444;
+}
+.messages__msg--error:before {
+  content: 'X';
+}
+
+
+.messages__msg--success {
+  background: #ccffcc;
+  color: #229922;
+  border-color: #229922;
+}
+.messages__msg--success:before {
+  content: '\\o/';
 }

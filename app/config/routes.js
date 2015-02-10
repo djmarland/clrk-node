@@ -20,16 +20,16 @@ module.exports = function (app, passport) {
     app.get('/', home.indexAction);
 
     /**
-     * Customers routes
+     * Customers routes (in order of preference)
      */
     app.get('/customers.:format?', customers.listAction);
     app.get('/customers/new', customers.newAction);
-    app.get('/customers/:customer_key.:format?', customers.showAction);
-
     app.post('/customers/new', customers.createAction);
+    app.all('/customers/:customer_key.:format?', customers.showAndEditAction);
 
-    app.param('customer_key', function(request, response, next, user_id) {
-        return models.customer.findById(user_id)
+
+    app.param('customer_key', function(request, response, next, customer_key) {
+        return models.customer.findByKey(customer_key)
             .then(function(customer) {
                 if (!customer) {
                     var err = new Error;
@@ -42,6 +42,11 @@ module.exports = function (app, passport) {
             })
             .catch(next);
     });
+
+
+    /**
+     * Recognise the formats
+     */
 
     app.param('format', function(request, response, next, format) {
         if (format &&

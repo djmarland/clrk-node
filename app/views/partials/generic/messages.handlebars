@@ -1,0 +1,13 @@
+{{#if this}}
+<ul class="messages">
+    {{#each this ~}}
+        <li class="messages__msg messages__msg--{{ this.type }}">
+            {{ this.message }}
+            {{#if this.debug ~}}
+                <br />
+                {{ this.debug }}
+            {{/if}}
+        </li>
+    {{/each}}
+</ul>
+{{/if}}

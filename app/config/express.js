@@ -6,6 +6,7 @@ var express = require('express');
 var session = require('express-session');
 var exphbs  = require('express-handlebars');
 var compression = require('compression');
+var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
@@ -77,6 +78,13 @@ module.exports = function (app, passport) {
             collection : 'sessions'
         })*/
     }));
+
+    // setup flash messenger
+    app.use(flash());
+    app.use(function(req, res, next){
+        res.locals.messages = req.flash('msg');
+        next();
+    });
 
     // use passport session
     app.use(passport.initialize());
