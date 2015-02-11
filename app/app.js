@@ -14,6 +14,9 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 // Bootstrap models
 require('models');
 
+// Bootstrap utils
+require('utils');
+
 // Bootstrap passport config
 require('config/passport')(passport, config);
 

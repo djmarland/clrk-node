@@ -28,7 +28,13 @@ module.exports = function (app, passport) {
     app.all('/customers/:customer_key.:format?', customers.showAndEditAction);
 
 
-    app.param('customer_key', function(request, response, next, customer_key) {
+    app.param('customer_key', function(req, res, next, customer_key) {
+        var upperKey = customer_key.toUpperCase();
+        if (upperKey != customer_key) {
+            // @todo use current route and params
+            return res.redirect('/customers/' + upperKey);
+        }
+
         return models.customer.findByKey(customer_key)
             .then(function(customer) {
                 if (!customer) {
@@ -37,7 +43,7 @@ module.exports = function (app, passport) {
                     err.status = 404;
                     return next(err);
                 }
-                request.customer = customer;
+                req.customer = customer;
                 return next();
             })
             .catch(next);
@@ -48,7 +54,7 @@ module.exports = function (app, passport) {
      * Recognise the formats
      */
 
-    app.param('format', function(request, response, next, format) {
+    app.param('format', function(req, res, next, format) {
         if (format &&
             format != 'json') {
             var err = new Error;
@@ -56,15 +62,15 @@ module.exports = function (app, passport) {
             err.status = 404;
             return next(err);
         }
-        request.format = format;
+        req.format = format;
         return next();
     });
 
     // assume 404 since no middleware responded
     // this is for when no routes match (so no format)
-    app.use(function (request, response, next) {
-        response.status(404).render('404', {
-            url: request.originalUrl,
+    app.use(function (req, res, next) {
+        res.status(404).render('404', {
+            url: req.originalUrl,
             message: 'Not found'
         });
     });
@@ -72,7 +78,7 @@ module.exports = function (app, passport) {
     /**
      * Error handling
      */
-    app.use(function (err, request, response, next) {
+    app.use(function (err, req, res, next) {
         // error page
         var data = {
             status: err.status || 500,
@@ -88,11 +94,11 @@ module.exports = function (app, passport) {
             data.status = 500;
         }
 
-        response.status(data.status);
-        if (request.format == 'json') {
-            response.json(data);
+        res.status(data.status);
+        if (req.format == 'json') {
+            res.json(data);
         } else {
-            response.render(data.status.toString(), data);
+            res.render(data.status.toString(), data);
         }
     });
 

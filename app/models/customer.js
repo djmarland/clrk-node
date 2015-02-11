@@ -1,5 +1,9 @@
 "use strict";
 
+var utils = require('utils');
+
+var KEY_PREFIX = 'C';
+
 module.exports = function(sequelize, DataTypes) {
     var Customer = sequelize.define(
         "customer",
@@ -36,11 +40,7 @@ module.exports = function(sequelize, DataTypes) {
             },
             getterMethods: {
                 key : function() {
-                    // ids haven't been converted yet
-                    return this.id;
-                },
-                key_print : function() {
-                    return this.key.toString().toUpperCase();
+                    return utils.key.fromId(this.id, KEY_PREFIX);
                 },
                 url : function() {
                     return '/customers/' + this.key;
@@ -50,8 +50,9 @@ module.exports = function(sequelize, DataTypes) {
     );
 
     Customer.findByKey = function(key) {
+        var id = utils.key.toId(key);
         // keys haven't been converted yet
-        return Customer.findById(key);
+        return Customer.findById(id);
     };
 
     Customer.findById = function(id) {
