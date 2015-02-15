@@ -18,6 +18,9 @@ module.exports = function() {
                 base = this.ALLOWED_CHARACTERS.length,
                 keyLen, i;
 
+            // ensure it was in the right case
+            key = key.toUpperCase();
+
             // strip of the first character of the key
             key = key.slice(1);
 
@@ -32,7 +35,12 @@ module.exports = function() {
                 power++;
             }
 
-            return (id - this.INFLATION);
+            id = (id - this.INFLATION);
+
+            if (id > 0) {
+                return id;
+            }
+            return null; // the key wasn't a real key
         },
 
         fromId: function (id, prefix) {

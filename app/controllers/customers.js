@@ -86,7 +86,7 @@ exports.showAndEditAction = function (req, res, next) {
             })
             .finally(function() {
                 latest();
-            })
+            });
 
     } else {
         latest();
@@ -143,3 +143,47 @@ exports.createAction = function (req, res, next) {
             res.render('customers/new', data);
         });
 };
+
+exports.searchPostAction = function(req, res, next) {
+    var data = req.body,
+        query = data.q || '';
+    return res.redirect('?q=' + query);
+}
+
+exports.searchAction = function(req, res, next) {
+    var query = req.query || null,
+        data = {
+            query : query.q || null,
+            customer_count : null,
+            customers : null
+        },
+        render = function() {
+            if (req.format == 'json') {
+                res.json(data);
+            } else {
+                res.render('customers/search', data);
+            }
+        };
+
+
+
+    if (data.query) {
+        data.search_form = {
+            q : data.query
+        };
+
+        models.customer.searchAndCount(
+            data.query,
+            10,
+            res.locals.page
+        )
+            .then(function(result) {
+                data.customers = result.rows;
+                data.customers_count = result.count;
+                render();
+            });
+    } else {
+        render();
+    }
+};
+

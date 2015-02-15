@@ -23,19 +23,43 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 }
             },
+            versionOfId: {
+                type: DataTypes.INTEGER,
+                references : "customers",
+                referencesKey : "id",
+                field: "versionOfId"
+            },
+            lastName: {
+                type: DataTypes.STRING,
+                field: 'lastName'
+            },
             address: {
                 type: DataTypes.STRING,
                 field: 'address'
             },
             postcode: {
                 type: DataTypes.STRING,
-                field: 'postcode'
+                field: 'postcode',
+                validate: {
+                    fn: function(val) {
+                        if (val && !utils.postcode.isValid(val)) {
+                            throw new Error("Not a valid UK postcode in the format AB12 3CD");
+                        }
+                    }
+                }
             }
         },
         {
             classMethods: {
                 associate: function (models) {
                     Customer.hasMany(models.job, { foreignKey: 'customerId' });
+                    Customer.hasMany(models.customer, { foreignKey: 'versionOfId' });
+                    Customer.belongsTo(models.customer, { foreignKey: "versionOfId" });
+                }
+            },
+            instanceMethods : {
+                onSave : function() {
+                    this.lastName = (this.name.split(' ').slice(-1).pop()).toLowerCase();
                 }
             },
             getterMethods: {
@@ -44,6 +68,26 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 url : function() {
                     return '/customers/' + this.key;
+                }
+            },
+            hooks: {
+                beforeCreate: function(customer, options, fn) {
+                    customer.onSave();
+                    fn(null, customer);
+                },
+                beforeUpdate: function(customer, options, fn) {
+                    customer.onSave();
+                    fn(null, customer);
+                },
+                afterValidate: function(customer, options, fn) {
+                    var postcode;
+                    if (customer.postcode) {
+                        postcode = utils.postcode.format(customer.postcode);
+                        if (postcode) {
+                            customer.setDataValue('postcode',postcode);
+                        }
+                    }
+                    fn(null, customer);
                 }
             }
         }
@@ -58,7 +102,10 @@ module.exports = function(sequelize, DataTypes) {
     Customer.findById = function(id) {
         return new sequelize.Promise(function(resolve, reject) {
             Customer.find({
-                where: ["id = ?", id],
+                where: {
+                    id: id,
+                    versionOfId: null // don't do this. Use the view instead
+                },
                 limit: 1
             })
             .then(function(result) {
@@ -74,7 +121,36 @@ module.exports = function(sequelize, DataTypes) {
             Customer.findAndCountAll({
                 offset: 0,
                 limit: 10,
-                order: 'id ASC'
+                order: '"lastName" ASC'
+            })
+            .then(function(result) {
+                resolve(result);
+            }).catch(function(e) {
+                reject(e);
+            });
+        });
+    };
+
+    Customer.searchAndCount = function(query, perPage, page) {
+        var idFromKey = utils.key.toId(query);
+        perPage = perPage || 10;
+        page    = page || 1;
+        return new sequelize.Promise(function(resolve, reject) {
+            var queries = [
+                ['"name" ILIKE ?', '%' + query + '%'],
+                ['"address" ILIKE ?', '%' + query + '%'],
+                ['"postcode" ILIKE ?', '%' + query + '%']
+            ];
+            if (idFromKey) {
+                queries.push(
+                    { id : idFromKey }
+                );
+            }
+            Customer.findAndCountAll({
+                where   : sequelize.or.apply(this,queries),
+                offset  : utils.pagination.offset(perPage, page),
+                limit   : perPage,
+                order   : '"lastName" ASC'
             })
             .then(function(result) {
                 resolve(result);

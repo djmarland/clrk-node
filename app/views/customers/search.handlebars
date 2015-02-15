@@ -1,0 +1,32 @@
+<h1>Search for customers</h1>
+
+<form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}" />
+    <div class="input-wrap {{ search_form.validation_errors.q_class }}">
+        <label class="input-label" for="form-q">Search</label>
+        <input class="input-head" type="text" name="q" id="form-q" value="{{ search_form.q }}" />
+        {{#if search_form.validation_errors.q }}
+        <p>{{ search_form.validation_errors.q }}</p>
+        {{/if}}
+    </div>
+    <div>
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+{{#if query }}
+    {{#if customers }}
+
+    <p>Total: {{ customers_count }}</p>
+
+    <ul>
+        {{#each customers}}
+        <li>{{> customer this }}</li>
+        {{/each}}
+    </ul>
+
+    <p>Pagination</p>
+    {{else}}
+        <p>No results</p>
+    {{/if}}
+{{/if}}

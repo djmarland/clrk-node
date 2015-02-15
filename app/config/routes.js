@@ -13,6 +13,35 @@ var models      = require('models');
 
 module.exports = function (app, passport) {
 
+    /**
+     * Setup page number
+     */
+    app.use(function (req, res, next) {
+        var query = req.query,
+            page = query.page || null,
+            err = new Error;
+
+        err.status = 400;
+
+        if (page === null) {
+            page = 1;
+        }
+
+        if (isNaN(page)) {
+            err.message = 'Page parameter is not a number';
+            return next(err);
+        }
+
+        page = parseInt(page, 10);
+
+        if (page < 1) {
+            err.message = 'Page parameter must be greater than 0';
+            return next(err);
+        }
+
+        res.locals.page = page;
+        return next();
+    });
 
     /**
      * Home route
@@ -25,6 +54,8 @@ module.exports = function (app, passport) {
     app.get('/customers.:format?', customers.listAction);
     app.get('/customers/new', customers.newAction);
     app.post('/customers/new', customers.createAction);
+    app.get('/customers/search.:format?', customers.searchAction);
+    app.post('/customers/search', customers.searchPostAction);
     app.all('/customers/:customer_key.:format?', customers.showAndEditAction);
 
 
@@ -87,9 +118,11 @@ module.exports = function (app, passport) {
         };
 
         var acceptableStatuses = [
-            403, 404, 500
-        ]
+            400, 403, 404, 500
+        ];
 
+
+        console.log(data.status);
         if (acceptableStatuses.indexOf(data.status) === -1) {
             data.status = 500;
         }

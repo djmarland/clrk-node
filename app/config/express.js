@@ -100,8 +100,4 @@ module.exports = function (app, passport) {
             next();
         });
     }
-
-    // set global variables
-    app.locals.errors = {};
-    app.locals.message = {};
 };
