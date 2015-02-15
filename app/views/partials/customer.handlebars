@@ -2,6 +2,10 @@
 
 <div>
 <a href="{{ url }}">
-    <p>Name: {{ name }}</p>
+    <p>Reference: {{ key }}</p>
+    <p>Name: {{{ highlight name q }}}</p>
+    {{#if inlineAddress}}
+        <p>Address: {{ inlineAddress }}</p>
+    {{/if}}
 </a>
 </div>

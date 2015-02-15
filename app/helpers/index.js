@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Singleton for utils
+ * Singleton for helpers
  */
 
 var fs        = require("fs"),
@@ -14,7 +14,7 @@ fs
         return (file.indexOf(".") !== 0) && (file !== "index.js");
     })
     .forEach(function(file) {
-        var model = new (require(path.join(__dirname, file))),
+        var model = require(path.join(__dirname, file)),
             name = file.replace('.js','');
         utils[name] = model;
     });

@@ -179,6 +179,7 @@ exports.searchAction = function(req, res, next) {
         )
             .then(function(result) {
                 data.customers = result.rows;
+                data.customers[0].inlineAddress;
                 data.customers_count = result.count;
                 render();
             });

@@ -4,13 +4,23 @@ module.exports = function() {
 
     return {
         // inflate the ID to give customer IDs the illusion of authority (big company)
-        // not done in the database to avoid need bigint too quickly
+        // not done in the database to avoid needing bigint too quickly
         INFLATION: 1020304,
 
         // remove vowels and 1/0 to reduce likelihood of words being formed
         ALLOWED_CHARACTERS : '23456789BCDFGHJKLMNPQRSTVWXYZ',
         DECIMAL_CHARACTERS : '0123456789',
 
+        // only used when coming in via search, to help fix human errors
+        toIdSanitised : function(key) {
+            // ensure it was in the right case
+            key = key.toUpperCase();
+
+            // replace 'oh' with 'zero'
+            key = key.replace('O','0');
+
+            return this.toId(key);
+        },
 
         toId: function (key) {
             var id = 0,
@@ -18,8 +28,7 @@ module.exports = function() {
                 base = this.ALLOWED_CHARACTERS.length,
                 keyLen, i;
 
-            // ensure it was in the right case
-            key = key.toUpperCase();
+
 
             // strip of the first character of the key
             key = key.slice(1);

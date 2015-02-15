@@ -60,7 +60,10 @@ module.exports = function(sequelize, DataTypes) {
             instanceMethods : {
                 onSave : function() {
                     this.lastName = (this.name.split(' ').slice(-1).pop()).toLowerCase();
+
+                    // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
                 }
+
             },
             getterMethods: {
                 key : function() {
@@ -68,6 +71,24 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 url : function() {
                     return '/customers/' + this.key;
+                },
+                inlineAddress : function() {
+                    var inititalparts = this.address.split(/\n/),
+                        finalParts = [];
+
+                    if (this.address) {
+                        inititalparts.forEach(function (part) {
+                            part = part.trim();
+                            if (part) {
+                                finalParts.push(part.trim().trim(',').trim());
+                            }
+                        });
+                    }
+                    if (this.postcode) {
+                        finalParts.push(this.postcode);
+                    }
+
+                    return finalParts.join(', ');
                 }
             },
             hooks: {
@@ -132,7 +153,7 @@ module.exports = function(sequelize, DataTypes) {
     };
 
     Customer.searchAndCount = function(query, perPage, page) {
-        var idFromKey = utils.key.toId(query);
+        var idFromKey = utils.key.toIdSanitised(query);
         perPage = perPage || 10;
         page    = page || 1;
         return new sequelize.Promise(function(resolve, reject) {

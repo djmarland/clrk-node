@@ -1,22 +1,24 @@
 "use strict";
 
 // Dependencies
-var express = require('express');
+var express = require('express'),
+    session = require('express-session'),
+    handlebars  = require('express-handlebars'),
+    exphbs  = require('express-handlebars'),
+    compression = require('compression'),
+    flash = require('connect-flash'),
+    cookieParser = require('cookie-parser'),
+    cookieSession = require('cookie-session'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
+    csrf = require('csurf'),
 
-var session = require('express-session');
-var exphbs  = require('express-handlebars');
-var compression = require('compression');
-var flash = require('connect-flash');
-var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var csrf = require('csurf');
+    config = require('config/config'),
+    pkg = require('../package.json'),
 
-var config = require('config/config');
-var pkg = require('../package.json');
+    env = process.env.NODE_ENV || 'development', // @todo - ensure production is default
 
-var env = process.env.NODE_ENV || 'development';
+    hbs;
 
 /**
  * Expose
@@ -40,7 +42,13 @@ module.exports = function (app, passport) {
         });*/
     }
 
-    app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+    hbs = exphbs({
+        defaultLayout: 'main',
+        helpers: require('helpers')
+    });
+
+    app.engine('handlebars', hbs);
+
     app.set('views', config.root + '/views');
     app.set('view engine', 'handlebars');
 

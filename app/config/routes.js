@@ -121,8 +121,6 @@ module.exports = function (app, passport) {
             400, 403, 404, 500
         ];
 
-
-        console.log(data.status);
         if (acceptableStatuses.indexOf(data.status) === -1) {
             data.status = 500;
         }
