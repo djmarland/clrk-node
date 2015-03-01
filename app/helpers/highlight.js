@@ -3,8 +3,12 @@
 var Handlebars = require('handlebars');
 
 module.exports = function(text, query) {
-
+    var rg = new RegExp('(' + query + ')',"gi");
     text = Handlebars.Utils.escapeExpression(text);
-    return '<strong>' + text + '</strong>';
+    if (!query) {
+        return text;
+    }
+    text = text.replace(rg,'<strong>$1</strong>');
+    return text;
 
 };

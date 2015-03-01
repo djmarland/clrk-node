@@ -1,11 +1,12 @@
-
-
-<div>
-<a href="{{ url }}">
-    <p>Reference: {{ key }}</p>
-    <p>Name: {{{ highlight name q }}}</p>
-    {{#if inlineAddress}}
-        <p>Address: {{ inlineAddress }}</p>
-    {{/if}}
-</a>
-</div>
+<tr onclick="window.location.href = '{{ url }}'">
+    <td class="cs__ref"><a class="cs" href="{{ url }}">{{{ highlight key searchQuery }}}</a></td>
+    <td class="cs__name"><a class="cs" href="{{ url }}">{{{ highlight name searchQuery }}}</a></td>
+    <td>
+        {{#if inlineAddress}}
+            {{{ highlight inlineAddress searchQuery }}}
+        {{/if}}
+    </td>
+    <td class="table__onward">
+        <a class="cs" href="{{ url }}"><i class="fa fa-arrow-right"></i></a>
+    </td>
+</tr>

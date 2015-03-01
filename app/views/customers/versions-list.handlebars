@@ -1,0 +1,37 @@
+<a href="{{ customer.url }}">
+    <h1>{{ customer.name }}</h1>
+    <p>{{ customer.key }}</p>
+</a>
+
+<h2>Edit history</h2>
+<table class="table--summary">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Edited by</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr class="table__row--active" onclick="window.location.href='{{ customer.url }}'">
+            <td>
+                <a href="{{ customer.url }}">
+                    {{ customer.updatedAt }}
+                </a>
+            </td>
+            <td>{{ customer.editedById }}</td>
+            <td>Current</td>
+        </tr>
+        {{#each versions}}
+            <tr onclick="window.location.href='{{ url }}'">
+                <td>
+                    <a href="{{ url }}">
+                        {{ updatedAt }}
+                    </a>
+                </td>
+                <td>{{ editedById }}</td>
+                <td><a href="#">Restore</a></td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>

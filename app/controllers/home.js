@@ -8,30 +8,20 @@
 var models = require('models');
 
 
-exports.indexAction = function (request, response) {
+exports.indexAction = function (req, res) {
     var results = {
-            customers: null,
-            customers_count : null,
             jobs : null,
             jobs_count : null
         };
-    models.customer.goFind()
-    .then(function(result) {
-        results.customers = result.rows;
-        results.customers_count = result.count;
 
-        // get jobs
-        return models.job.goFind();
-
-    }).then(function(result) {
+    models.job.goFind().then(function(result) {
         results.jobs = result.rows;
         results.jobs_count = result.count;
 
-            response.render('home/index', results);
+            res.render('home/index', results);
     })
     .catch(function(e) {
-        console.log(e.message);
-        response.send('killed');
+        res.send('killed');
     }).finally(function() {
 
     });

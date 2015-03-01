@@ -1,0 +1,27 @@
+<div style="float:right;width: 39%">
+    <h1>Customer: <a href="{{ customer.url }}">{{ customer.key }}</a></h1>
+    <p>This is an archive version of this document. <a href="{{ customer.url }}">View the current version</a></p>
+
+    <p>Saved: {{ customer.updatedAt }} by {{ customer.editedById }}</p>
+
+    <p><a href="#">Restore this version</a></p>
+
+    <p>
+    {{#if previousVersion}}
+        <a href="{{ previousVersion.url }}"><i class="fa fa-arrow-left"></i> Older ({{ previousVersion.updatedAt }})</a>
+    {{else}}
+        This is the first version
+    {{/if}}
+    |
+    {{#if nextVersion}}
+        <a href="{{ nextVersion.url }}">Newer ({{ nextVersion.updatedAt }}) <i class="fa fa-arrow-right"></i></a>
+    {{else}}
+        <a href="{{ customer.url }}">Current version <i class="fa fa-arrow-right"></i></a>
+    {{/if}}
+    </p>
+</div>
+
+
+<div style="float:left;width: 60%">
+{{> customers/display version }}{{!-- partial must NOT have indentation --}}
+</div>

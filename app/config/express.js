@@ -1,24 +1,38 @@
 "use strict";
 
-// Dependencies
-var express = require('express'),
-    session = require('express-session'),
-    handlebars  = require('express-handlebars'),
-    exphbs  = require('express-handlebars'),
-    compression = require('compression'),
-    flash = require('connect-flash'),
-    cookieParser = require('cookie-parser'),
-    cookieSession = require('cookie-session'),
-    bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
-    csrf = require('csurf'),
+/**
+ * Module dependencies.
+ */
+    // main express
+var express         = require('express'),
+    // handlebars
+    handlebars      = require('express-handlebars'),
+    // handlebars for express
+    exphbs          = require('express-handlebars'),
+    // session handling
+    session         = require('express-session'),
+    // gzip static assets
+    compression     = require('compression'),
+    // flash messages
+    flash           = require('connect-flash'),
+    // parse cookies
+    cookieParser    = require('cookie-parser'),
+    // for parsing JSON
+    bodyParser      = require('body-parser'),
+    // for recieving POST
+    methodOverride  = require('method-override'),
+    // CSRF form tokens
+    csrf            = require('csurf'),
+    // connection sessions to sequelize
+    SequelizeStore = require('connect-session-sequelize')(session.Store),
 
+    models = require('models'),
     config = require('config/config'),
     pkg = require('../package.json'),
 
-    env = process.env.NODE_ENV || 'development', // @todo - ensure production is default
+    env = process.env.NODE_ENV || 'production',
 
-    hbs;
+    hbs, sess;
 
 /**
  * Expose
@@ -76,16 +90,27 @@ module.exports = function (app, passport) {
 
     // cookieParser should be above session
     app.use(cookieParser());
-    app.use(cookieSession({ secret: 'secret' }));
-    app.use(session({
-        secret: pkg.name,
+
+    sess =  {
+        name: 'app-state',
         resave: false,
-        saveUninitialized: true,
-        store: null /*new dbStore({
-            url: config.db,
-            collection : 'sessions'
-        })*/
-    }));
+        secret: pkg.name,
+        cookie: {
+            maxAge: (1000*60*60*24*365),
+            httpOnly: false
+        },
+        saveUninitialized: false,
+        store: new SequelizeStore({
+            db: models.sequelize
+        })
+    };
+
+    if (app.get('env') === 'production') {
+        app.set('trust proxy', 1); // trust first proxy
+        sess.cookie.secure = true; // serve secure cookies
+    }
+
+    app.use(session(sess));
 
     // setup flash messenger
     app.use(flash());
@@ -98,14 +123,12 @@ module.exports = function (app, passport) {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    // adds CSRF support
-    if (process.env.NODE_ENV !== 'test') {
-        app.use(csrf());
+    // adds CSRF support{
+    app.use(csrf());
 
-        // This could be moved to view-helpers :-)
-        app.use(function(req, res, next){
-            res.locals.csrf_token = req.csrfToken();
-            next();
-        });
-    }
+    // This could be moved to view-helpers :-)
+    app.use(function(req, res, next){
+        res.locals.csrfToken = req.csrfToken();
+        next();
+    });
 };

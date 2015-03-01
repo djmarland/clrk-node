@@ -2,22 +2,29 @@
   box-sizing: border-box;
 }
 
+h1 {
+    font-weight: lighter;
+}
+
 p {
   margin-top: 0;
 }
 
 body {
-  padding: 50px;
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: #EEF1FF;
+    background: #31363D;
+}
+
+input, textarea {
+    color: #EEF1FF;
 }
 
 a {
   color: #00B7FF;
 }
 
-li a {
-  display: block;
-}
 
 input, textarea {
   border: none;
@@ -105,4 +112,43 @@ input, textarea {
 }
 .messages__msg--success:before {
   content: '\\o/';
+}
+
+.table--summary {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.table--summary thead {
+    position: sticky;
+}
+.table--summary th,
+.table--summary td {
+    text-align: left;
+    padding: 12px 6px;
+    border-bottom: solid 1px #666;
+}
+.table--summary tbody tr:hover {
+    cursor: pointer;
+    background: #555;
+}
+.table__row--active {
+    background: #585868;
+}
+
+.table__onward {
+    width: 24px;
+}
+
+.pg {
+    text-align: center;
+    margin: 12px 0;
+}
+
+.pg__list {
+    list-style: none;
+    padding: 0;
+}
+.pg__item {
+    display: inline;
 }

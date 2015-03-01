@@ -5,17 +5,33 @@
 
 
 //Dependencies
-var models = require('models');
+var models  = require('models'),
+    utils   = require('utils');
 
 exports.listAction = function (req, res, next) {
-    var data = {
-        customers: null,
-        customers_count : null
-    };
-    models.customer.goFind()
-        .then(function(result) {
+    var perPage = 50,
+        data = {
+            customers: null,
+            pagination : utils.pagination.setup(
+                perPage,
+                req
+            )
+        };
+    models.customer.findLatest(
+        data.pagination.perPage,
+        data.pagination.currentPage
+    ).then(function(result) {
+            var err;
             data.customers = result.rows;
-            data.customers_count = result.count;
+            data.pagination.finalise(result.count);
+
+            if (data.pagination.isOutOfRange()) {
+                err = new Error;
+                err.message = 'No such page number';
+                err.status = 404;
+                return next(err);
+            }
+
             if (req.format == 'json') {
                 res.json(data);
             } else {
@@ -27,13 +43,13 @@ exports.listAction = function (req, res, next) {
 exports.showAndEditAction = function (req, res, next) {
     var data = {
             customer: req.customer,
-            customer_form: req.customer
+            customerForm: req.customer
         },
 
         render = function() {
-            data.customer_form.action = data.customer.url;
-            data.customer_form.csrf_token = req.csrfToken();
-            data.has_edit_rights = true;
+            data.customerForm.action = data.customer.url;
+            data.customerForm.csrfToken = req.csrfToken();
+            data.hasEditRights = true;
             if (req.format == 'json') {
                 res.json(data);
             } else {
@@ -43,8 +59,12 @@ exports.showAndEditAction = function (req, res, next) {
         latest = function() {
             return models.job.findLatestByCustomer(data.customer)
                 .then(function(result) {
-                    data.latest_jobs = result.rows;
-                    data.jobs_count = result.count;
+                    data.latestJobs = result.rows;
+                    data.jobsCount = result.count;
+                    return models.customer.countVersionsByCustomer(data.customer).
+                        then(function(result) {
+                            data.previousVersionCount = result;
+                        });
                 })
                 .catch(function(err) {
                     req.flash('msg',{
@@ -58,8 +78,9 @@ exports.showAndEditAction = function (req, res, next) {
         };
 
     if (req.method === 'POST') {
-        data.customer_form = req.body;
-        data.customer.update(data.customer_form)
+        data.customerForm = req.body;
+        data.customerForm.editedById = 1;
+        data.customer.update(data.customerForm)
             .then(function(result) {
                 res.locals.messages.push({
                     message : 'Saved successfully',
@@ -96,18 +117,19 @@ exports.showAndEditAction = function (req, res, next) {
 
 exports.newAction = function (req, res) {
     res.render('customers/new', {
-        customer_form : {
+        customerForm : {
             action : '/customers/new',
-            csrf_token : req.csrfToken()
+            csrfToken : req.csrfToken()
         }
     });
 };
 
 exports.createAction = function (req, res, next) {
     var data = {
-        customer_form : req.body
+        customerForm : req.body
     };
-    models.customer.new(data.customer_form)
+    data.customerForm.editedById = 1;
+    models.customer.new(data.customerForm)
         .then(function(result) {
             // all was good
             req.flash('msg',{
@@ -118,14 +140,14 @@ exports.createAction = function (req, res, next) {
             res.redirect(result.url);
         })
         .catch(function(err) {
-            data.customer_form.action = '/customers/new';
-            data.customer_form.csrf_token = req.csrfToken();
+            data.customerForm.action = '/customers/new';
+            data.customerForm.csrfToken = req.csrfToken();
             if (err.name === 'SequelizeValidationError') {
-                data.customer_form.validation_errors = {};
+                data.customerForm.validationErrors = {};
                 // validation error. set value and continue
                 err.errors.forEach(function(e) {
-                    data.customer_form.validation_errors[e.path] = e.message;
-                    data.customer_form.validation_errors[e.path + '_class'] = 'error';
+                    data.customerForm.validationErrors[e.path] = e.message;
+                    data.customerForm.validationErrors[e.path + 'Class'] = 'error';
                     res.locals.messages.push({
                         message : e.message,
                         type : "error"
@@ -152,10 +174,14 @@ exports.searchPostAction = function(req, res, next) {
 
 exports.searchAction = function(req, res, next) {
     var query = req.query || null,
+        perPage = 50,
         data = {
             query : query.q || null,
-            customer_count : null,
-            customers : null
+            customers : null,
+            pagination : utils.pagination.setup(
+                perPage,
+                req
+            )
         },
         render = function() {
             if (req.format == 'json') {
@@ -166,21 +192,42 @@ exports.searchAction = function(req, res, next) {
         };
 
 
-
     if (data.query) {
-        data.search_form = {
+        data.searchForm = {
             q : data.query
         };
 
         models.customer.searchAndCount(
             data.query,
-            10,
-            res.locals.page
+            data.pagination.perPage,
+            data.pagination.currentPage
         )
             .then(function(result) {
+                var err, key;
                 data.customers = result.rows;
-                data.customers[0].inlineAddress;
-                data.customers_count = result.count;
+                data.pagination.finalise(result.count);
+
+                // if it matched the key exactly,
+                // immediately redirect to that customer
+                if (data.pagination.totalCount == 1 &&
+                    data.customers[0].key.toLowerCase() == data.query.toLowerCase()
+                ) {
+                    return res.redirect(data.customers[0].url);
+                }
+
+                if (data.pagination.isOutOfRange()) {
+                    err = new Error;
+                    err.message = 'No such page number';
+                    err.status = 404;
+                    return next(err);
+                }
+
+                if (data.pagination.totalCount > 0) {
+                    // apply the search query to each
+                    data.customers.forEach(function(customer) {
+                        customer.searchQuery = data.query;
+                    })
+                }
                 render();
             });
     } else {
@@ -188,3 +235,78 @@ exports.searchAction = function(req, res, next) {
     }
 };
 
+exports.versionsListAction = function(req, res, next) {
+    var perPage = 50,
+        data = {
+            customer : req.customer,
+            versions : null,
+            pagination : utils.pagination.setup(
+                perPage,
+                req
+            )
+        },
+        render = function() {
+            if (req.format == 'json') {
+                res.json(data);
+            } else {
+                res.render('customers/versions-list', data);
+            }
+        };
+
+    models.customer.findVersionsByCustomer(
+        req.customer,
+        data.pagination.perPage,
+        data.pagination.currentPage
+    )
+        .then(function(result) {
+            var err, key;
+            data.versions = result.rows;
+            data.pagination.finalise(result.count);
+
+            if (data.pagination.isOutOfRange()) {
+                err = new Error;
+                err.message = 'No such page number';
+                err.status = 404;
+                return next(err);
+            }
+            render();
+        });
+};
+
+exports.versionsShowAction = function(req, res, next) {
+    var err,
+        data = {
+            customer : req.customer,
+            version : req.version,
+            previousVersion : null,
+            nextVersion : null
+        },
+        render = function() {
+            if (req.format == 'json') {
+                res.json(data);
+            } else {
+                res.render('customers/versions-show', data);
+            }
+        };
+
+        if (data.customer.id != data.version.versionOfId) {
+            err = new Error;
+            err.message = 'The combination of customer ID and version ID does not exist';
+            err.status = 404;
+            return next(err);
+        }
+
+        models.customer.findPreviousVersion(
+            data.version
+        )
+        .then(function(result) {
+            data.previousVersion = result;
+            return models.customer.findNextVersion(
+                data.version
+            ).then(function(result) {
+                    data.nextVersion = result;
+                    render();
+                });
+        });
+
+};

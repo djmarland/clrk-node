@@ -2,27 +2,28 @@
 
 <div style="float:right;width: 39%">
     <p>Customer reference: {{ customer.key }}</p>
-    <p>Last updated: {{ customer.updatedAt }}</p></div>
+    <p>Last updated: {{ customer.updatedAt }} by {{ customer.editedById }}</p>
+    {{#if previousVersionCount}}
+        <p><a href="/customers/{{ customer.key }}/versions">
+            {{ previousVersionCount }} previous versions. See all <i class="fa fa-arrow-right"></i>
+        </a></p>
+    {{/if}}
+</div>
 
 <div style="float:left;width: 60%">
-{{#if has_edit_rights}}
-{{> customers/details customer_form }}{{!-- partial must NOT have indentation --}}
+{{#if hasEditRights}}
+{{> customers/details customerForm }}{{!-- partial must NOT have indentation --}}
 {{else}}
-    <h1>{{ customer.name }}</h1>
-    <h2>Address:</h2>
-    <p>{{ customer.address }}</p>
-
-    <h2>Postcode</h2>
-    <p>{{ customer.postcode }}</p>
+{{> customers/display customer }}{{!-- partial must NOT have indentation --}}
 {{/if}}
 </div>
 
 <div style="clear:both">
 <h2>Jobs</h2>
-<p>Total: {{ jobs_count }}</p>
+<p>Total: {{ jobsCount }}</p>
 
 <ul>
-    {{#each latest_jobs}}
+    {{#each latestJobs}}
     <li>{{> job this }}</li>
     {{/each}}
 </ul>

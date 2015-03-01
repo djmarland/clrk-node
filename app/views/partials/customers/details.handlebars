@@ -1,11 +1,11 @@
 <div class="customer-form">
     <form action="{{ action }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrf_token }}" />
-        <div class="input-wrap {{ validation_errors.name_class }}">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <div class="input-wrap {{ validationErrors.nameClass }}">
             <label class="input-label" for="form-name">Name</label>
             <input class="input-head" type="text" name="name" id="form-name" value="{{ name }}" />
-        {{#if validation_errors.name }}
-            <p>{{ validation_errors.name }}</p>
+        {{#if validationErrors.name }}
+            <p>{{ validationErrors.name }}</p>
         {{/if}}
         </div>
         <div class="input-wrap">

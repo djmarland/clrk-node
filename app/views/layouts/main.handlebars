@@ -3,9 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Example App</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 <body>
+
+{{#if loggedInUser}}
+<div>Hello {{loggedInUser.name}} -  <a href="/logout">Logout</a></div>
+{{/if}}
 
 <div>
     <nav>

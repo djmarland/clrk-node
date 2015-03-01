@@ -1,5 +1,9 @@
 "use strict";
 
+var utils = require('utils'),
+
+    KEY_PREFIX = 'J';
+
 module.exports = function(sequelize, DataTypes) {
     var Job = sequelize.define(
         "job",

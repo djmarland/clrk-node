@@ -1,0 +1,25 @@
+<h1>New User</h1>
+<p>A starter password will be generated and e-mailed to the user.
+    They will be required to change it on initial login.</p>
+<div class="newuser-form">
+    <form action="{{ userForm.action }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ userForm.csrfToken }}" />
+        <div class="input-wrap {{ userForm.validationErrors.nameClass }}">
+            <label class="input-label" for="form-name">Name</label>
+            <input class="input-head" type="text" required="true" name="name" id="form-name" value="{{ userForm.name }}" />
+            {{#if userForm.validationErrors.name }}
+            <p>{{ userForm.validationErrors.name }}</p>
+            {{/if}}
+        </div>
+        <div class="input-wrap {{ userForm.validationErrors.emailClass }}">
+            <label class="input-label" for="form-email">E-mail address</label>
+            <input class="input-head" type="email" required="true" name="email" id="form-email" value="{{ userForm.email }}" />
+            {{#if userForm.validationErrors.email }}
+            <p>{{ userForm.validationErrors.email }}</p>
+            {{/if}}
+        </div>
+        <div>
+            <button type="submit">Create</button>
+        </div>
+    </form>
+</div>

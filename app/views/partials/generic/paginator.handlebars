@@ -1,0 +1,34 @@
+<div class="pg">
+    <p>Showing {{listOffset}} - {{listOffsetEnd}} of {{totalCount}}</p>
+    {{#if hasPagination}}
+        <ul class="pg__list" data-source="pagination">
+            <li class="pg__item pg__item--pn">
+                {{#if previousPage}}
+                    <a class="pg__nav" href="{{previousPage}}">Previous</a>
+                {{else}}
+                    <span class="pg__nav--disabled">Previous</span>
+                {{/if}}
+            </li>
+            {{#each visiblePages}}
+                <li class="pg__item pg__item--page">
+                    {{#if href}}
+                        <a class="pg__link" href="{{href}}">
+                            {{ label }}
+                        </a>
+                    {{else}}
+                        <span class="{{ state }}">
+                            {{ label }}
+                        </span>
+                    {{/if}}
+                </li>
+            {{/each}}
+            <li class="pg__item pg__item--pn">
+                {{#if nextPage}}
+                    <a class="pg__nav" href="{{nextPage}}">Next</a>
+                {{else}}
+                    <span class="pg__nav--disabled">Next</span>
+                {{/if}}
+            </li>
+        </ul>
+    {{/if}}
+</div>

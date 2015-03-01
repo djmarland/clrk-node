@@ -1,8 +1,8 @@
 "use strict";
 
-var utils = require('utils');
+var utils = require('utils'),
 
-var KEY_PREFIX = 'C';
+    KEY_PREFIX = 'C';
 
 module.exports = function(sequelize, DataTypes) {
     var Customer = sequelize.define(
@@ -28,6 +28,12 @@ module.exports = function(sequelize, DataTypes) {
                 references : "customers",
                 referencesKey : "id",
                 field: "versionOfId"
+            },
+            editedById: {
+                type: DataTypes.INTEGER,
+                /*references : "users",
+                referencesKey : "id",*/
+                field: "editedById"
             },
             lastName: {
                 type: DataTypes.STRING,
@@ -59,9 +65,37 @@ module.exports = function(sequelize, DataTypes) {
             },
             instanceMethods : {
                 onSave : function() {
+                    var err;
                     this.lastName = (this.name.split(' ').slice(-1).pop()).toLowerCase();
 
                     // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
+                    if (!this.changed()) {
+                        // nothing changed
+                        err = new Error;
+                        err.message = 'No changes were made';
+                        throw err;
+                    }
+
+                    if (!this.isNewRecord) {
+                        this.copyToVersion();
+                    }
+                },
+                copyToVersion : function() {
+                    var self = this,
+                        originalId = this.id,
+                        attributes = this._previousDataValues,
+                        query = 'insert',
+                        args;
+
+                    delete attributes.id; // remove the 'id' field so it can be reset
+                    attributes.versionOfId = originalId;
+
+                    args = [self, self.Model.getTableName(), attributes, {}];
+
+                    return self.QueryInterface[query].apply(self.QueryInterface, args)
+                        .then(function(result) {
+                            return result;
+                        });
                 }
 
             },
@@ -70,6 +104,11 @@ module.exports = function(sequelize, DataTypes) {
                     return utils.key.fromId(this.id, KEY_PREFIX);
                 },
                 url : function() {
+                    var parentKey;
+                    if (this.versionOfId) {
+                        parentKey = utils.key.fromId(this.versionOfId, KEY_PREFIX);
+                        return '/customers/' + parentKey + '/versions/' + this.key;
+                    }
                     return '/customers/' + this.key;
                 },
                 inlineAddress : function() {
@@ -124,8 +163,7 @@ module.exports = function(sequelize, DataTypes) {
         return new sequelize.Promise(function(resolve, reject) {
             Customer.find({
                 where: {
-                    id: id,
-                    versionOfId: null // don't do this. Use the view instead
+                    id: id
                 },
                 limit: 1
             })
@@ -137,12 +175,17 @@ module.exports = function(sequelize, DataTypes) {
         });
     };
 
-    Customer.goFind = function() {
+    Customer.findLatest = function(perPage, page) {
+        var perPage = perPage || 10;
+            page    = page || 1;
         return new sequelize.Promise(function(resolve, reject) {
             Customer.findAndCountAll({
-                offset: 0,
-                limit: 10,
-                order: '"lastName" ASC'
+                where : {
+                    versionOfId : null // ideally this should handled with a DB view
+                },
+                offset  : utils.pagination.offset(perPage, page),
+                limit   : perPage,
+                order: '"updatedAt" DESC'
             })
             .then(function(result) {
                 resolve(result);
@@ -168,7 +211,10 @@ module.exports = function(sequelize, DataTypes) {
                 );
             }
             Customer.findAndCountAll({
-                where   : sequelize.or.apply(this,queries),
+                where : sequelize.and(
+                    { versionOfId : null },
+                    sequelize.or.apply(this, queries)
+                ),
                 offset  : utils.pagination.offset(perPage, page),
                 limit   : perPage,
                 order   : '"lastName" ASC'
@@ -188,6 +234,69 @@ module.exports = function(sequelize, DataTypes) {
                     resolve(customer);
                 }).catch(function(e) {
                     reject(e)
+                });
+        });
+    };
+
+    Customer.findVersionsByCustomer = function(customer, perPage, page) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.findAndCountAll({
+                where   : { versionOfId : customer.id },
+                offset  : utils.pagination.offset(perPage, page),
+                limit   : perPage,
+                order   : '"updatedAt" DESC'
+            })
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(e) {
+                    reject(e);
+                });
+        });
+    };
+
+    Customer.countVersionsByCustomer = function(customer) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.count({
+                where   : { versionOfId : customer.id }
+            })
+            .then(function(result) {
+                resolve(result);
+            }).catch(function(e) {
+                reject(e);
+            });
+        });
+    };
+
+    Customer.findPreviousVersion = function(version) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.findOne({
+                where   : [
+                    { versionOfId : version.versionOfId },
+                    [ '"updatedAt" < ?' , version.updatedAt ]
+                ],
+                order   : '"updatedAt" DESC'
+            })
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(e) {
+                    reject(e);
+                });
+        });
+    };
+
+    Customer.findNextVersion = function(version) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Customer.findOne({
+                where   : [
+                    { versionOfId : version.versionOfId },
+                    [ '"updatedAt" > ?' , version.updatedAt ]
+                ],
+                order   : '"updatedAt" ASC'
+            })
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(e) {
+                    reject(e);
                 });
         });
     };

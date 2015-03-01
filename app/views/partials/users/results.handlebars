@@ -1,0 +1,23 @@
+<div data-resultset data-resultsetnext="{{ pagination.nextPage }}">
+    {{#if users }}
+    <table class="table--summary">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>E-mail</th>
+            <th>Password hash</th>
+            <th>Admin?</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody data-source="users">
+        {{#each users}}
+        {{> users/single this }}
+        {{/each}}
+        </tbody>
+    </table>
+    {{> generic/paginator pagination }}
+    {{else}}
+    <p>No users were found for this query</p>
+    {{/if}}
+</div>

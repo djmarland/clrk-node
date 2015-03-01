@@ -1,15 +1,8 @@
 <h1>{{ title }}</h1>
 {{> generic/messages messages }}
-<p>Total: {{ customers_count }}</p>
-
-<ul>
-    {{#each customers}}
-    <li>{{> customer this }}</li>
-    {{/each}}
-</ul>
 
 <h2>Jobs</h2>
-<p>Total: {{ jobs_count }}</p>
+<p>Total: {{ jobsCount }}</p>
 
 <ul>
     {{#each jobs}}
