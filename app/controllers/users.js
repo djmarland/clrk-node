@@ -78,11 +78,29 @@ exports.createAction = function (req, res, next) {
     data.userForm.password = generatedPassword;
     models.user.new(data.userForm)
         .then(function(result) {
+            var emailData = {
+                layout : 'email',
+                user : {
+                    name: result.name,
+                    email: result.email,
+                    password: generatedPassword
+                }
+            };
+            // send the user a welcome e-mail
+            res.render('emails/new-user', emailData, function(err, body){
+                utils.mail.send(
+                    result.email,
+                    'Welcome to your new account',
+                    body
+                );
+            });
+
             // all was good
             req.flash('msg',{
                 message : result.name + ' was created as a user and saved. Their temporary password is: ' + generatedPassword,
                 type : "success"
             });
+
             // redirect to user page
             res.redirect(result.url);
         })
@@ -115,6 +133,7 @@ exports.createAction = function (req, res, next) {
 
 exports.loginAction = function (req, res, next) {
     var data = {
+            layout : 'login',
             loginForm : {}
         },
         render = function() {

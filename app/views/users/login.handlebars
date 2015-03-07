@@ -1,4 +1,3 @@
-<h1>Login</h1>
 <div class="login-form">
     <form action="/login" method="post">
         <input type="hidden" name="_csrf" value="{{ loginForm.csrfToken }}" />
@@ -12,13 +11,14 @@
         </div>
         <div class="input-wrap {{ validationErrors.passwordClass }}">
             <label class="input-label" for="form-password">Password</label>
-            <input class="input-head" type="password" name="password" required="true" id="form-password" value="{{ loginForm.password }}" />
+            <input class="input-head" type="password" name="password" id="form-password" value="{{ loginForm.password }}" />
             {{#if validationErrors.password }}
             <p>{{ validationErrors.password }}</p>
             {{/if}}
         </div>
         <div>
-            <button type="submit">Login</button>
+            <button class="btn" type="submit" name="login">Login</button>
+            <button class="btn" type="submit" name="forgotten">Forgotten password</button>
         </div>
     </form>
 </div>

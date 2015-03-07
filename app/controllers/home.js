@@ -5,7 +5,8 @@
 
 
 //Dependencies
-var models = require('models');
+var models = require('models'),
+    utils  = require('utils');
 
 
 exports.indexAction = function (req, res) {
@@ -13,6 +14,8 @@ exports.indexAction = function (req, res) {
             jobs : null,
             jobs_count : null
         };
+
+
 
     models.job.goFind().then(function(result) {
         results.jobs = result.rows;

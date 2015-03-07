@@ -152,3 +152,16 @@ input, textarea {
 .pg__item {
     display: inline;
 }
+
+.btn {
+    background: #222;
+    color: #fff;
+    border: solid 1px #555555;
+    padding: 12px;
+    cursor: pointer;
+}
+.btn:hover,
+.btn:active,
+.btn:focus{
+    background: #111;
+}

@@ -24,7 +24,9 @@ module.exports = function (app) {
      * Should always be logged in for everything else
      */
     app.use(function (req, res, next) {
-        var data = {},
+        var data = {
+                layout : 'login'
+            },
             sendTo;
         if(!req.isAuthenticated()){
             sendTo = req.path || '/';
