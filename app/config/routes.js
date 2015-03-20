@@ -20,6 +20,22 @@ module.exports = function (app) {
      */
     app.all('/login', users.loginAction); // @todo - handler to check if already logged in
 
+    app.get('/logout', function(req, res){
+        if (req.user) {
+            req.logout();
+            req.flash('msg', {
+                message: 'Logged out sucessfully',
+                type: "success"
+            });
+        } else {
+            req.flash('msg', {
+                message: "You're not logged in. You must therefore login before you can log out. But logging in when you're already logged out in order to log out once logged in would be logging in pointlessly, as you're already logged out.",
+                type: "info"
+            });
+        }
+        res.redirect('/');
+    });
+
     /**
      * Should always be logged in for everything else
      */
@@ -39,19 +55,31 @@ module.exports = function (app) {
             };
             res.render('users/login', data);
         } else {
-        // if password expired, redirect to change password screen
             res.locals.loggedInUser = req.user;
             next();
         }
     });
 
-    app.get('/logout', function(req, res){
-        req.logout();
-        req.flash('msg',{
-            message : 'Logged out sucessfully',
-            type : "success"
-        });
-        res.redirect('/');
+    // Change Password page does not need the password to be in date
+    app.all('/change-password', users.changePasswordAction);
+
+    // All other routes need to check that your password has not expired
+    app.use(function (req, res, next) {
+        var data = {},
+            sendTo;
+        if(req.user.passwordExpired){
+            sendTo = req.path || '/';
+            if (sendTo == '/change-password') {
+                sendTo = '/';
+            }
+            data.passwordForm = {
+                csrfToken : req.csrfToken(),
+                sendTo : sendTo
+            };
+            res.render('users/change-password', data);
+        } else {
+            next();
+        }
     });
 
     /**
@@ -92,10 +120,11 @@ module.exports = function (app) {
     /**
      * User routes
      */
+
     app.get('/users.:format?', users.listAction);
     app.get('/users/new', users.newAction);
     app.post('/users/new', users.createAction);
-    app.get('/users/:userKey.:format?', users.showAction);
+    app.all('/users/:userKey.:format?', users.showAndEditAction);
 
 
     app.param('userKey', function(req, res, next, userKey) {
@@ -114,12 +143,7 @@ module.exports = function (app) {
                     return next(err);
                 }
 
-                // if the user version is a subversion, redirect
-                if (user.versionOfId) {
-                    return res.redirect(user.url);
-                }
-
-                req.user = user;
+                req.viewedUser = user;
                 return next();
             })
             .catch(next);

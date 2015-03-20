@@ -1,7 +1,7 @@
 {{> layout/head this }}
 
 {{#if loggedInUser}}
-<div>Hello {{loggedInUser.name}} -  <a href="/logout">Logout</a></div>
+<div>Hello <a href="{{loggedInUser.url}}">{{loggedInUser.name}}</a> -  <a href="/logout">Logout</a></div>
 {{/if}}
 
 <div>

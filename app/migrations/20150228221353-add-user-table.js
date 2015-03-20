@@ -22,13 +22,8 @@ module.exports = {
                     allowNull: false
                 },
                 email: DataTypes.STRING,
-                password: DataTypes.STRING,
-                isAdmin: {
-                    type: DataTypes.BOOLEAN,
-                    allowNull: false,
-                    defaultValue: false
-                },
-                passwordExpired: DataTypes.DATE
+                passwordHash: DataTypes.STRING,
+                passwordExpiry: DataTypes.DATE
             }
         );
         done();

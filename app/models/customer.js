@@ -31,8 +31,8 @@ module.exports = function(sequelize, DataTypes) {
             },
             editedById: {
                 type: DataTypes.INTEGER,
-                /*references : "users",
-                referencesKey : "id",*/
+                references : "users",
+                referencesKey : "id",
                 field: "editedById"
             },
             lastName: {
@@ -58,15 +58,19 @@ module.exports = function(sequelize, DataTypes) {
         {
             classMethods: {
                 associate: function (models) {
-                    Customer.hasMany(models.job, { foreignKey: 'customerId' });
-                    Customer.hasMany(models.customer, { foreignKey: 'versionOfId' });
+                    Customer.hasMany(models.job, { foreignKey: "customerId" });
+                    Customer.hasMany(models.customer, { foreignKey: "versionOfId" });
                     Customer.belongsTo(models.customer, { foreignKey: "versionOfId" });
+                    Customer.belongsTo(models.user, {
+                        as : "Editor",
+                        foreignKey: "editedById"
+                    });
                 }
             },
             instanceMethods : {
                 onSave : function() {
                     var err;
-                    this.lastName = (this.name.split(' ').slice(-1).pop()).toLowerCase();
+                    this.lastName = (this.name.split(" ").slice(-1).pop()).toLowerCase();
 
                     // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
                     if (!this.changed()) {
@@ -161,11 +165,16 @@ module.exports = function(sequelize, DataTypes) {
 
     Customer.findById = function(id) {
         return new sequelize.Promise(function(resolve, reject) {
-            Customer.find({
+            var models = require('models');
+            Customer.findOne({
                 where: {
                     id: id
                 },
-                limit: 1
+                limit: 1,
+                include: [{
+                    model : models.user,
+                    as : "Editor"
+                }]
             })
             .then(function(result) {
                 resolve(result);
@@ -240,11 +249,16 @@ module.exports = function(sequelize, DataTypes) {
 
     Customer.findVersionsByCustomer = function(customer, perPage, page) {
         return new sequelize.Promise(function(resolve, reject) {
+            var models = require('models');
             Customer.findAndCountAll({
                 where   : { versionOfId : customer.id },
                 offset  : utils.pagination.offset(perPage, page),
                 limit   : perPage,
-                order   : '"updatedAt" DESC'
+                order   : '"updatedAt" DESC',
+                include: [{
+                    model : models.user,
+                    as : "Editor"
+                }]
             })
                 .then(function(result) {
                     resolve(result);

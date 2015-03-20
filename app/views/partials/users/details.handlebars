@@ -1,21 +1,19 @@
-<div class="customer-form">
+<div class="user-form">
     <form action="{{ action }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <div class="input-wrap {{ validationErrors.nameClass }}">
             <label class="input-label" for="form-name">Name</label>
             <input class="input-head" type="text" required="true" name="name" id="form-name" value="{{ name }}" />
-        {{#if validationErrors.name }}
+            {{#if validationErrors.name }}
             <p>{{ validationErrors.name }}</p>
-        {{/if}}
+            {{/if}}
         </div>
-        <div class="input-wrap">
-            <label class="input-label" for="form-address">Address</label>
-            <textarea name="address" id="form-address">{{ address }}</textarea>
-        </div>
-        <div class="input-wrap">
-            <label class="input-label" for="form-postcode">Postcode</label>
-            <input type="text" name="postcode" id="form-postcode" value="{{ postcode }}" />
-
+        <div class="input-wrap {{ validationErrors.emailClass }}">
+            <label class="input-label" for="form-email">E-mail</label>
+            <input class="input-head" type="email" required="true" name="email" id="form-email" value="{{ email }}" />
+            {{#if validationErrors.email }}
+            <p>{{ validationErrors.email }}</p>
+            {{/if}}
         </div>
         <div>
             <button type="submit">Save</button>

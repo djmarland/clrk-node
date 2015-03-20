@@ -6,6 +6,7 @@
 
 var bcrypt = require('bcrypt-nodejs'),
     utils = require('utils'),
+    models = require('models'),
 
     KEY_PREFIX = 'U';
 
@@ -35,7 +36,10 @@ module.exports = function(sequelize, DataTypes) {
                     notEmpty: {
                         msg: 'User must have an e-mail address'
                     },
-                    isEmail : true,
+                    isEmail : {
+                        args : true,
+                        msg : "Not a valid e-mail address"
+                    },
                     isUnique: function(value, next) {
 
                         User.findByEmail(value)
@@ -59,29 +63,58 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 }
             },
-            password: {
+            passwordHash: {
                 type: DataTypes.STRING,
-                field: "password"
+                field: "passwordHash"
             },
-            isAdmin: {
-                type: DataTypes.BOOLEAN,
-                field: "isAdmin",
-                allowNull: false,
-                defaultValue : false
+            currentPassword : {
+                type      : DataTypes.VIRTUAL,
+                validate  : {
+                    match : function (val) {
+                    //    console.log(this.verifyPassword(val));
+                  //q         return true;
+                        if (!this.verifyPassword(val)) {
+                            throw new Error('Current password is incorrect');
+                        }
+                    }
+                }
             },
-            passwordExpired : {
+            password: {
+                type      : DataTypes.VIRTUAL,
+                validate  : {
+                    len : {
+                        args:  [6, Infinity],
+                        msg: "For security, your password must be at least 6 characters long"
+                    }
+                }
+            },
+            passwordConfirmation: {
+                type      : DataTypes.VIRTUAL,
+                validate  : {
+                    match : function (val) {
+                        if (val !== this.password) {
+                            throw new Error('The two password fields do not match');
+                        }
+                    }
+                }
+            },
+            passwordExpiry : {
                 type: DataTypes.DATE
             }
         },
         {
             classMethods: {
+                associate: function (models) {
+                    User.hasMany(models.customer, { foreignKey: "editedById" });
+                }
             },
             instanceMethods: {
                 toJSON: function () {
                     var values = this.values;
 
                     // don't show sensitive data in JSON
-                    delete values.password;
+                    delete values.passwordHash;
+                    delete values.passwordExpiry;
                     delete values.passwordExpired;
 
                     if (this.client) {
@@ -96,10 +129,13 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 setPassword: function(password, done) {
                     var hash = bcrypt.hashSync(password);
-                    this.password = hash;
+                    this.passwordHash = hash;
                 },
                 verifyPassword : function(passwordToCheck) {
-                    return bcrypt.compareSync(passwordToCheck, this.password);
+                    return bcrypt.compareSync(passwordToCheck, this.passwordHash);
+                },
+                matches : function(user) {
+                    return (user.id === this.id);
                 }
             },
             getterMethods: {
@@ -108,6 +144,12 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 url : function() {
                     return '/users/' + this.key;
+                },
+                passwordExpired : function() {
+                    return(
+                        this.passwordExpiry &&
+                        this.passwordExpiry <= utils.time.now
+                    );
                 }
             },
             hooks: {
@@ -118,7 +160,7 @@ module.exports = function(sequelize, DataTypes) {
                 beforeUpdate: function (user, options, fn) {
                     user.onSave();
                     fn(null, user);
-                },
+                }
             }
         }
     );

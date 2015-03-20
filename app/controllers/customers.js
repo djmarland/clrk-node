@@ -9,7 +9,7 @@ var models  = require('models'),
     utils   = require('utils');
 
 exports.listAction = function (req, res, next) {
-    var perPage = 50,
+    var perPage = 200,
         data = {
             customers: null,
             pagination : utils.pagination.setup(
@@ -79,31 +79,17 @@ exports.showAndEditAction = function (req, res, next) {
 
     if (req.method === 'POST') {
         data.customerForm = req.body;
-        data.customerForm.editedById = 1;
+        data.customerForm.editedById = req.user.id;
         data.customer.update(data.customerForm)
             .then(function(result) {
+                data.customer.Editor = req.user;
                 res.locals.messages.push({
                     message : 'Saved successfully',
                     type : "success"
                 });
             })
             .catch(function (err) {
-                if (err.name === 'SequelizeValidationError') {
-                    err.errors.forEach(function(e) {
-                        res.locals.messages.push({
-                            message : e.message,
-                            type : "error"
-                        });
-                    });
-                } else {
-                    // general error
-                    res.locals.messages.push({
-                        message : 'Error saving data. Please try again',
-                        type : "error",
-                        debug : err.message
-                    });
-
-                }
+                utils.crud.setFormValidationErrors(data.customerForm, res, err);
             })
             .finally(function() {
                 latest();
@@ -142,26 +128,7 @@ exports.createAction = function (req, res, next) {
         .catch(function(err) {
             data.customerForm.action = '/customers/new';
             data.customerForm.csrfToken = req.csrfToken();
-            if (err.name === 'SequelizeValidationError') {
-                data.customerForm.validationErrors = {};
-                // validation error. set value and continue
-                err.errors.forEach(function(e) {
-                    data.customerForm.validationErrors[e.path] = e.message;
-                    data.customerForm.validationErrors[e.path + 'Class'] = 'error';
-                    res.locals.messages.push({
-                        message : e.message,
-                        type : "error"
-                    });
-                });
-
-            } else {
-                // general error, send to view
-                res.locals.messages.push({
-                    message : 'Failed to save. Please try again',
-                    type : "error",
-                    debug : err.message
-                });
-            }
+            utils.crud.setFormValidationErrors(data.customerForm, res, err);
             res.render('customers/new', data);
         });
 };

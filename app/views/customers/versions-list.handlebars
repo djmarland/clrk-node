@@ -19,7 +19,7 @@
                     {{ customer.updatedAt }}
                 </a>
             </td>
-            <td>{{ customer.editedById }}</td>
+            <td>{{ customer.Editor.name }}</td>
             <td>Current</td>
         </tr>
         {{#each versions}}
@@ -29,7 +29,7 @@
                         {{ updatedAt }}
                     </a>
                 </td>
-                <td>{{ editedById }}</td>
+                <td>{{ Editor.name }}</td>
                 <td><a href="#">Restore</a></td>
             </tr>
         {{/each}}

@@ -10,7 +10,7 @@ var models   = require('models'),
     passport = require('passport');
 
 exports.listAction = function (req, res, next) {
-    var perPage = 50,
+    var perPage = 200,
         data = {
             users: null,
             pagination : utils.pagination.setup(
@@ -41,12 +41,17 @@ exports.listAction = function (req, res, next) {
         }).catch(next);
 };
 
-exports.showAction = function (req, res) {
+exports.showAndEditAction = function (req, res) {
     var data = {
-            user: req.user
+            user: req.viewedUser,
+            userForm: req.viewedUser,
+            userIsCurrent: req.viewedUser.matches(req.user)
         },
 
         render = function() {
+            data.userForm.action = data.user.url;
+            data.userForm.csrfToken = req.csrfToken();
+            data.hasEditRights = true; // @todo - check for rights
             if (req.format == 'json') {
                 res.json(data);
             } else {
@@ -54,7 +59,30 @@ exports.showAction = function (req, res) {
             }
         };
 
-    render();
+    if (req.method === 'POST') {
+        data.userForm = req.body;
+        data.user.update(data.userForm)
+            .then(function(result) {
+                res.locals.messages.push({
+                    message : 'Saved successfully',
+                    type : "success"
+                });
+                // override previously set data with the result (where required)
+                req.viewedUser = data.user = result
+                if (data.userIsCurrent) {
+                    res.locals.loggedInUser = req.viewedUser;
+                }
+            })
+            .catch(function (err) {
+                utils.crud.setFormValidationErrors(data.userForm, res, err);
+            })
+            .finally(function() {
+                render();
+            });
+    } else {
+        render();
+    }
+
 };
 
 exports.newAction = function (req, res) {
@@ -74,7 +102,7 @@ exports.createAction = function (req, res, next) {
         generatedPassword = Date.now().toString().split("").reverse().join("");
 
     // ensure the password has expired
-    data.userForm.passwordExpired = new Date();
+    data.userForm.passwordExpiry = utils.time.now;
     data.userForm.password = generatedPassword;
     models.user.new(data.userForm)
         .then(function(result) {
@@ -97,7 +125,7 @@ exports.createAction = function (req, res, next) {
 
             // all was good
             req.flash('msg',{
-                message : result.name + ' was created as a user and saved. Their temporary password is: ' + generatedPassword,
+                message : result.name + ' was created as a user and has been e-mailed an initial login password',
                 type : "success"
             });
 
@@ -107,26 +135,7 @@ exports.createAction = function (req, res, next) {
         .catch(function(err) {
             data.userForm.action = '/users/new';
             data.userForm.csrfToken = req.csrfToken();
-            if (err.name === 'SequelizeValidationError') {
-                data.userForm.validationErrors = {};
-                // validation error. set value and continue
-                err.errors.forEach(function(e) {
-                    data.userForm.validationErrors[e.path] = e.message;
-                    data.userForm.validationErrors[e.path + 'Class'] = 'error';
-                    res.locals.messages.push({
-                        message : e.message,
-                        type : "error"
-                    });
-                });
-
-            } else {
-                // general error, send to view
-                res.locals.messages.push({
-                    message : 'Failed to save. Please try again',
-                    type : "error",
-                    debug : err.message
-                });
-            }
+            utils.crud.setFormValidationErrors(data.userForm, res, err);
             res.render('users/new', data);
         });
 };
@@ -157,8 +166,8 @@ exports.loginAction = function (req, res, next) {
             if (!user) {
                 res.locals.messages.push({
                     message : info.message,
-                    type : "error",
-                    debug : info.message
+                    type : 'error',
+                    debug : 'Debug: ' + info.message
                 });
                 return render();
             }
@@ -173,35 +182,47 @@ exports.loginAction = function (req, res, next) {
                 return res.redirect(sendTo);
             });
         })(req, res, next);
-
-
-        /*models.user.new(data.loginForm)
-            .then(function(result) {
-
-            }).catch(function(err) {
-                if (err.name === 'SequelizeValidationError') {
-                    data.userForm.validationErrors = {};
-                    // validation error. set value and continue
-                    err.errors.forEach(function(e) {
-                        data.userForm.validationErrors[e.path] = e.message;
-                        data.userForm.validationErrors[e.path + 'Class'] = 'error';
-                        res.locals.messages.push({
-                            message : e.message,
-                            type : "error"
-                        });
-                    });
-
-                } else {
-                    // general error, send to view
-                    res.locals.messages.push({
-                        message : 'Failed to save. Please try again',
-                        type : "error",
-                        debug : err.message
-                    });
-                }
-                render();
-            });*/
     } else {
         render();
+    }
+};
+
+exports.changePasswordAction = function (req, res, next) {
+    var message,
+        data = {
+            passwordForm: req.body || {}
+        },
+        render = function () {
+            data.requiresCurrentPassword = !req.user.passwordExpired;
+            data.passwordForm.csrfToken = req.csrfToken();
+            res.render('users/change-password', data);
+        };
+
+    if (req.method === 'POST') {
+        // reset passwordExpiry
+        data.passwordForm.passwordExpiry = null;
+        req.user.update(data.passwordForm)
+            .then(function(result) {
+                message = {
+                    message : 'Password updated successfully',
+                    type : "success"
+                };
+
+                if (data.passwordForm.sendTo) {
+                    req.flash('msg',message);
+                    return res.redirect(data.passwordForm.sendTo);
+                }
+
+                res.locals.messages.push(message);
+                return render();
+            })
+            .catch(function (err) {
+                utils.crud.setFormValidationErrors(data.passwordForm, res, err);
+                return render();
+            });
+
+        // @todo will this need to reset the user cookie?
+    } else {
+        return render();
     }
 };

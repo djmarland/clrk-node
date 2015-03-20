@@ -11,7 +11,7 @@
         </div>
         <div class="input-wrap {{ validationErrors.passwordClass }}">
             <label class="input-label" for="form-password">Password</label>
-            <input class="input-head" type="password" name="password" id="form-password" value="{{ loginForm.password }}" />
+            <input class="input-head" type="password" name="password" id="form-password" />
             {{#if validationErrors.password }}
             <p>{{ validationErrors.password }}</p>
             {{/if}}
