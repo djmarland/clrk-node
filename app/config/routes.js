@@ -16,9 +16,33 @@ var home        = require('controllers/home'),
 module.exports = function (app) {
 
     /**
+     * Pre-fetch the application settings
+     */
+    app.use(function (req, res, next) {
+        models.settings.get()
+            .then(function(result) {
+                // apply the settings to the request
+                req.appSettings = result;
+
+                // ensure the views can see the settings
+                res.locals.appSettings = result;
+
+                // continue
+                return next();
+            })
+            .catch(function(err) {
+                // serious error. App must die
+                err.status = 500;
+                return next(err);
+            });
+
+    });
+
+
+    /**
      * Pages that don't need login go first
      */
-    app.all('/login', users.loginAction); // @todo - handler to check if already logged in
+    app.all('/login', users.loginAction);
 
     app.get('/logout', function(req, res){
         if (req.user) {
@@ -33,8 +57,14 @@ module.exports = function (app) {
                 type: "info"
             });
         }
-        res.redirect('/');
+
+        // manual redirect to ensure cookie was really set
+        res.location('/');
+        res.writeHead(302);
+        return res.end();
     });
+
+    app.get('/users/:userKey/reset-password', users.resetPasswordAction);
 
     /**
      * Should always be logged in for everything else
@@ -113,9 +143,11 @@ module.exports = function (app) {
     });
 
     /**
-     * Home route
+     * Standalone routes
      */
     app.get('/', home.indexAction);
+    app.all('/settings.:format?', home.settingsAction);
+
 
     /**
      * User routes

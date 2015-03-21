@@ -11,9 +11,15 @@
         a:visited {
             color: #00B7FF;
         }
+        .banner {
+            text-align: center;
+            background: #333;
+            padding: 12px 0;
+        }
     </style>
 </head>
 <body>
+<div class="banner">{{ appSettings.applicationName }}</div>
 <h1 class="welcome">Hello {{ user.name }}</h1>
 {{{body}}}
 </body>

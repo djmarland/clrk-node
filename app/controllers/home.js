@@ -29,3 +29,35 @@ exports.indexAction = function (req, res) {
 
     });
 };
+
+exports.settingsAction = function (req, res) {
+    var data = {
+            settingsForm : req.appSettings
+        },
+        render = function() {
+            res.render('home/settings', data);
+        }
+
+    if (req.method === 'POST') {
+        data.settingsForm = req.body;
+        req.appSettings.update(data.settingsForm)
+            .then(function(result) {
+                res.locals.messages.push({
+                    message : 'Saved successfully',
+                    type : "success"
+                });
+                // override previously set data with the result
+                res.locals.appSettings = result;
+            })
+            .catch(function (err) {
+                utils.crud.setFormValidationErrors(data.settingsForm, res, err);
+            })
+            .finally(function() {
+                render();
+            });
+    } else {
+        render();
+    }
+
+
+};

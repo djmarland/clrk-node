@@ -68,7 +68,7 @@ exports.showAndEditAction = function (req, res) {
                     type : "success"
                 });
                 // override previously set data with the result (where required)
-                req.viewedUser = data.user = result
+                req.viewedUser = data.user = result;
                 if (data.userIsCurrent) {
                     res.locals.loggedInUser = req.viewedUser;
                 }
@@ -98,8 +98,8 @@ exports.createAction = function (req, res, next) {
     var data = {
             userForm : req.body
         },
-        // generate a password by reversing the current timestamp
-        generatedPassword = Date.now().toString().split("").reverse().join("");
+        // generate a password randomly
+        generatedPassword = require('MD5')(Math.random());
 
     // ensure the password has expired
     data.userForm.passwordExpiry = utils.time.now;
@@ -119,7 +119,8 @@ exports.createAction = function (req, res, next) {
                 utils.mail.send(
                     result.email,
                     'Welcome to your new account',
-                    body
+                    body,
+                    req
                 );
             });
 
@@ -151,6 +152,11 @@ exports.loginAction = function (req, res, next) {
         },
         sendTo = req.path || '/';
 
+    if (req.user) {
+        // already logged in
+        return res.redirect('/');
+    }
+
     if (sendTo == '/login') {
         sendTo = '/';
     }
@@ -158,7 +164,66 @@ exports.loginAction = function (req, res, next) {
     if (req.method === 'POST') {
         data.loginForm = req.body;
 
-        // todo - form validation
+        if (req.body.forgotten !== undefined) {
+            // forgotten password button was clicked
+            if (data.loginForm.email) {
+                // get the user
+                return models.user.findByEmail(data.loginForm.email)
+                    .then(function(result) {
+                        var resetPassword = require('MD5')(Math.random());
+
+                        if (!result) {
+                            return; // no such user. Do nothing (don't even tell the user)
+                        }
+
+                        // set the reset password
+                        result.resetPassword = resetPassword;
+
+                        // save (async)
+                        result.save();
+
+                        // send the user a welcome e-mail
+                        res.render('emails/reset-password', {
+                            layout : 'email',
+                            user : result,
+                            resetUrl : 'http://localhost:4567' +
+                                        result.url +
+                                        '/reset-password?single-use-key=' +
+                                        resetPassword
+                        }, function(err, body){
+                            utils.mail.send(
+                                result.email,
+                                'Reset your password',
+                                body,
+                                req
+                            );
+                        });
+
+
+                    })
+                    .catch(function(err) {
+                        // todo - log an error happened, but don't send message back to the user
+                    })
+                    .finally(function() {
+                        res.locals.messages.push({
+                            message : 'Check your e-mail for instructions on how to reset your password',
+                            type : 'info'
+                        });
+                        return render();
+                    });
+            } else {
+                data.loginForm.validationErrors = {};
+                data.loginForm.validationErrors.email = 'E-mail address required';
+                data.loginForm.validationErrors.emailClass = 'error';
+                res.locals.messages.push({
+                    message : 'Enter your e-mail address and click "Forgotten password" to send reset instructions',
+                    type : 'error'
+                });
+                return render();
+            }
+
+
+        }
 
         //req.session.cookie.maxAge = (365*24*60*60*1000); // 1 year
         return passport.authenticate('local', function(err, user, info) {
@@ -179,7 +244,10 @@ exports.loginAction = function (req, res, next) {
                     message : 'Logged in',
                     type : "success"
                 });
-                return res.redirect(sendTo);
+                // manual redirect to ensure cookie was really set
+                res.location(data.loginForm.sendTo);
+                res.writeHead(302);
+                return res.end();
             });
         })(req, res, next);
     } else {
@@ -199,8 +267,6 @@ exports.changePasswordAction = function (req, res, next) {
         };
 
     if (req.method === 'POST') {
-        // reset passwordExpiry
-        data.passwordForm.passwordExpiry = null;
         req.user.update(data.passwordForm)
             .then(function(result) {
                 message = {
@@ -225,4 +291,41 @@ exports.changePasswordAction = function (req, res, next) {
     } else {
         return render();
     }
+};
+
+exports.resetPasswordAction = function (req, res, next) {
+    var key = req.query['single-use-key'],
+        err;
+    if (key) {
+        if (req.viewedUser.verifyResetPassword(key)) {
+
+            // set the password expiry
+            req.viewedUser.passwordExpiry = utils.time.now;
+
+            // wipe the single use key
+            req.viewedUser.resetHash = null;
+
+            // save
+            req.viewedUser.save();
+
+            // log the user in
+            return req.logIn(req.viewedUser, function(err) {
+                if (err) {
+                    return next(err);
+                }
+
+                // manual redirect to ensure cookie was really set
+                res.location('/');
+                res.writeHead(302);
+                return res.end();
+            });
+        }
+    }
+
+    // drop through, must have been an issue
+    err = new Error;
+    err.message = 'Invalid Credentials';
+    err.status = 403;
+    return next(err);
+
 };

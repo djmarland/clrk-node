@@ -29,11 +29,11 @@ module.exports = function() {
 
     return {
         // only used when coming in via search, to help fix human errors
-        send : function(to, subject, body) {
+        send : function(to, subject, body, req) {
             var mailOptions = {
                 from: from, // sender address
                 to: to, // list of receivers
-                subject: 'APPLICATION: ' + subject, // Subject line
+                subject: req.appSettings.applicationName + ' - ' + subject, // Subject line
                 html: body // html body
             };
             if (transporter) {

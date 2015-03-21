@@ -1,0 +1,17 @@
+<h1>Settings</h1>
+
+<div class="settings-form">
+    <form action="{{ action }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <div class="input-wrap {{ settingsForm.validationErrors.applicationNameClass }}">
+            <label class="input-label" for="form-applicationName">Application Name</label>
+            <input class="input-head" type="text" required="true" name="applicationName" id="form-applicationName" value="{{ settingsForm.applicationName }}" />
+            {{#if settingsForm.validationErrors.applicationName }}
+            <p>{{ settingsForm.validationErrors.applicationName }}</p>
+            {{/if}}
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>

@@ -1,5 +1,7 @@
 {{> layout/head this }}
 
+<h1>{{ appSettings.applicationName }}</h1>
+
 {{#if loggedInUser}}
 <div>Hello <a href="{{loggedInUser.url}}">{{loggedInUser.name}}</a> -  <a href="/logout">Logout</a></div>
 {{/if}}
@@ -8,6 +10,7 @@
     <nav>
         <ul>
             <li><a href="/customers">Customers</a></li>
+            <li><a href="/settings">Admin settings</a></li>
         </ul>
     </nav>
 </div>

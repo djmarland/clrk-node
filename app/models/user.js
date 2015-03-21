@@ -67,12 +67,17 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 field: "passwordHash"
             },
+            resetHash: {
+                type: DataTypes.STRING,
+                field: "resetHash"
+            },
+            resetPassword: {
+                type      : DataTypes.VIRTUAL
+            },
             currentPassword : {
                 type      : DataTypes.VIRTUAL,
                 validate  : {
                     match : function (val) {
-                    //    console.log(this.verifyPassword(val));
-                  //q         return true;
                         if (!this.verifyPassword(val)) {
                             throw new Error('Current password is incorrect');
                         }
@@ -126,13 +131,25 @@ module.exports = function(sequelize, DataTypes) {
                     if (this.changed('password')) {
                         this.setPassword(this.password);
                     }
+                    if (this.changed('resetPassword')) {
+                        this.setResetPassword(this.resetPassword);
+                    }
                 },
                 setPassword: function(password, done) {
                     var hash = bcrypt.hashSync(password);
                     this.passwordHash = hash;
+                    // setting a new password will clear the password expiry
+                    this.passwordExpiry = null;
+                },
+                setResetPassword: function(password, done) {
+                    var hash = bcrypt.hashSync(password);
+                    this.resetHash = hash;
                 },
                 verifyPassword : function(passwordToCheck) {
                     return bcrypt.compareSync(passwordToCheck, this.passwordHash);
+                },
+                verifyResetPassword : function(passwordToCheck) {
+                    return bcrypt.compareSync(passwordToCheck, this.resetHash);
                 },
                 matches : function(user) {
                     return (user.id === this.id);

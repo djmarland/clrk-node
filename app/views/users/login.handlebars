@@ -2,23 +2,23 @@
     <form action="/login" method="post">
         <input type="hidden" name="_csrf" value="{{ loginForm.csrfToken }}" />
         <input type="hidden" name="sendTo" value="{{ loginForm.sendTo }}" />
-        <div class="input-wrap {{ validationErrors.emailClass }}">
+        <div class="input-wrap {{ loginForm.validationErrors.emailClass }}">
             <label class="input-label" for="form-email">Email</label>
             <input data-activeonload class="input-head" type="email" required="true" name="email" id="form-email" value="{{ loginForm.email }}" />
-            {{#if validationErrors.email }}
-            <p>{{ validationErrors.email }}</p>
+            {{#if loginForm.validationErrors.email }}
+            <p>{{ loginForm.validationErrors.email }}</p>
             {{/if}}
         </div>
-        <div class="input-wrap {{ validationErrors.passwordClass }}">
+        <div class="input-wrap {{ loginForm.validationErrors.passwordClass }}">
             <label class="input-label" for="form-password">Password</label>
             <input class="input-head" type="password" name="password" id="form-password" />
-            {{#if validationErrors.password }}
-            <p>{{ validationErrors.password }}</p>
+            {{#if loginForm.validationErrors.password }}
+            <p>{{ loginForm.validationErrors.password }}</p>
             {{/if}}
         </div>
         <div>
-            <button class="btn" type="submit" name="login">Login</button>
-            <button class="btn" type="submit" name="forgotten">Forgotten password</button>
+            <button class="btn" type="submit" name="login">Login</button><!--
+            --><button class="btn" type="submit" name="forgotten">Forgotten password</button>
         </div>
     </form>
 </div>
