@@ -24,6 +24,9 @@ then
   #cd angular-phonecat
   #git checkout -f step-0
 
+  echo "SETTING NODE_PATH"
+  export NODE_PATH=.
+
   touch /home/vagrant/already-installed-flag
   echo "Done!"
 else

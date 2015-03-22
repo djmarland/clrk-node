@@ -56,6 +56,7 @@ exports.showAndEditAction = function (req, res, next) {
                 res.render('customers/show', data);
             }
         },
+
         latest = function() {
             return models.job.findLatestByCustomer(data.customer)
                 .then(function(result) {
@@ -68,7 +69,7 @@ exports.showAndEditAction = function (req, res, next) {
                 })
                 .catch(function(err) {
                     req.flash('msg',{
-                        message : 'Unable to fetch jobs',
+                        message : 'Failed to fetch jobs for customer.',
                         type : "error",
                         debug : err.message
                     });
@@ -157,7 +158,6 @@ exports.searchAction = function(req, res, next) {
                 res.render('customers/search', data);
             }
         };
-
 
     if (data.query) {
         data.searchForm = {

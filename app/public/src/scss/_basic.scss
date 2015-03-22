@@ -1,36 +1,49 @@
+@import 'variables/common';
+
+html {
+  fas : saf;
+}
+
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
-h1 {
-    font-weight: lighter;
+.logo {
+  background: url('../images/logo.png');
 }
+
+
+h1 {
+  font-weight: lighter;
+}
+
+
+
 
 p {
   margin-top: 0;
 }
 
 body {
-    padding: 50px;
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    color: #EEF1FF;
-    background: #31363D;
+  padding : 48px;
+  font: $font-global;
+  color: $color-body-text;
+  background: $color-body-bg;
 }
 
 input, textarea {
-    color: #EEF1FF;
+  color: $color-body-text;
 }
 
 a {
-  color: #00B7FF;
+  color: $color-link;
 }
-
 
 input, textarea {
   border: none;
-  border-bottom: solid 1px #999;
+  border-bottom: solid 1px $color-keyline;
   width: 100%;
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: $font-global;
   background: transparent;
   padding-right: 64px;
 }
@@ -46,14 +59,14 @@ input, textarea {
 }
 .input-wrap {
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: $spacing-double;
 }
 .input-label {
   position: absolute;
   bottom: 4px;
   right: 4px;
   font-size: 14px;
-  color: #999;
+  color: $color-keyline;
 }
 
 .customer-form {
@@ -67,21 +80,21 @@ input, textarea {
 
 .messages {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: $spacing-default;
+  left: $spacing-default;
+  right: $spacing-default;
   list-style: none;
-  margin: 0 0 24px 0;
+  margin: 0 0 $spacing-double 0;
   padding:0;
 }
 .messages__msg {;
   border-radius: 4px;
-  padding: 12px 18px;
+  padding: $spacing-default 18px;
   border: solid 1px;
-  margin-bottom: 6px;
+  margin-bottom: $spacing-half;
 }
 .messages__msg:before {
-  margin-right: 12px;
+  margin-right: $spacing-default;
   font-weight: bold;
 }
 
@@ -104,7 +117,6 @@ input, textarea {
   content: 'X';
 }
 
-
 .messages__msg--success {
   background: #ccffcc;
   color: #229922;
@@ -115,88 +127,88 @@ input, textarea {
 }
 
 .table--summary {
-    width: 100%;
-    border-spacing: 0;
+  width: 100%;
+  border-spacing: 0;
 }
 
 .table--summary thead {
-    position: sticky;
+  position: sticky;
 }
 .table--summary th,
 .table--summary td {
-    text-align: left;
-    padding: 12px 6px;
-    border-bottom: solid 1px #666;
+  text-align: left;
+  padding: $spacing-default $spacing-half;
+  border-bottom: solid 1px #666;
 }
 .table--summary tbody tr:hover {
-    cursor: pointer;
-    background: #555;
+  cursor: pointer;
+  background: #555;
 }
 .table__row--active {
-    background: #585868;
+  background: #585868;
 }
 
 .table__onward {
-    width: 24px;
+  width: $spacing-double;
 }
 
 .pg {
-    text-align: center;
-    margin: 12px 0;
+  text-align: center;
+  margin: $spacing-default 0;
 }
 
 .pg__list {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 .pg__item {
-    display: inline;
+  display: inline;
 }
 
 .btn {
-    background: #222;
-    color: #fff;
-    border: solid 1px #555555;
-    padding: 12px;
-    cursor: pointer;
+  background: #222;
+  color: #fff;
+  border: solid 1px #555555;
+  padding: $spacing-default;
+  cursor: pointer;
 }
 .btn:hover,
 .btn:active,
 .btn:focus{
-    background: #111;
+  background: #111;
 }
 
 
 @-webkit-keyframes fadeout {
-    0%, 50%   { opacity: 1}
-    100% { opacity: 0 }
+  0%, 50%   { opacity: 1}
+  100% { opacity: 0 }
 }
 @keyframes fadeout {
-    0%, 50%   { opacity: 1}
-    100% { opacity: 0 }
+  0%, 50%   { opacity: 1}
+  100% { opacity: 0 }
 }
 
 .messages__msg {
-    -webkit-animation: fadeout 6s ease-in forwards; /* Safari 4+ */
-    animation:         fadeout 6s ease-in forwards; /* IE 10+, Fx 29+ */
+  -webkit-animation: fadeout 6s ease-in forwards; /* Safari 4+ */
+  animation:         fadeout 6s ease-in forwards; /* IE 10+, Fx 29+ */
 }
 
 .messages__msg:nth-child(1) {
-    -webkit-animation-delay: 0.4s;
-    animation-delay: 0.4s;
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
 }
 
 .messages__msg:nth-child(2) {
-    -webkit-animation-delay: 0.8s;
-    animation-delay: 0.8s;
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
 }
 
 .messages__msg:nth-child(3) {
-    -webkit-animation-delay: 1.2s;
-    animation-delay: 1.2s;
+  -webkit-animation-delay: 1.2s;
+  animation-delay: 1.2s;
 }
 
 .messages__msg:nth-child(4) {
-    -webkit-animation-delay: 1.6s;
-    animation-delay: 1.6s;
+  -webkit-animation-delay: 1.6s;
+  animation-delay: 1.6s;
 }
