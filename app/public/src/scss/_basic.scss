@@ -1,35 +1,23 @@
+// this is the main file which groups everything together
+
+// variables
 @import 'variables/common';
 
-html {
-  fas : saf;
-}
+// generic
+@import 'generic/mixins';
+@import 'generic/functions';
 
-*, *:before, *:after {
-  box-sizing: border-box;
-}
+// structure
+@import 'vendor/_normalize';
 
-.logo {
-  background: url('../images/logo.png');
-}
+@import 'structure/body';
+@import 'structure/typography';
+@import 'structure/grid';
 
+// objects
+@import 'objects/code';
+@import 'objects/highlight';
 
-h1 {
-  font-weight: lighter;
-}
-
-
-
-
-p {
-  margin-top: 0;
-}
-
-body {
-  padding : 48px;
-  font: $font-global;
-  color: $color-body-text;
-  background: $color-body-bg;
-}
 
 input, textarea {
   color: $color-body-text;
@@ -43,7 +31,7 @@ input, textarea {
   border: none;
   border-bottom: solid 1px $color-keyline;
   width: 100%;
-  font: $font-global;
+  font-family: $font-family-global;
   background: transparent;
   padding-right: 64px;
 }

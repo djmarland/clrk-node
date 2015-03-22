@@ -1,7 +1,7 @@
 {{#if user.isAdmin}}<p>ADMINISTRATOR</p>{{/if}}
 
 {{#if hasEditRights}}
-{{> users/details userForm }}{{!-- partial must NOT have indentation --}}
+{{> users/details this }}{{!-- partial must NOT have indentation --}}
 {{else}}
 {{> users/display user }}{{!-- partial must NOT have indentation --}}
 {{/if}}

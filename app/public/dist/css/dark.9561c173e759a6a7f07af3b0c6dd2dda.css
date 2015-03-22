@@ -519,24 +519,13 @@ pre {
   padding: 12px;
   margin-bottom: 12px;
   background-color: #000;
-  background-color: rgba(0, 0, 0, 0.3); }
-
-.h-box, blockquote {
-  background: #F9B53A;
-  color: #31363D;
-  padding: 12px; }
-
-.h-color {
-  color: #F9B53A; }
-
-.h-bg {
-  background: #F9B53A; }
+  background-color: rgba(0, 0, 0, 0.5); }
 
 input, textarea {
   color: #EEF1FF; }
 
 a {
-  color: #F9B53A; }
+  color: #00B7FF; }
 
 input, textarea {
   border: none;

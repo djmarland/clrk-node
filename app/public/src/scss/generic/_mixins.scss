@@ -1,0 +1,9 @@
+@mixin px-to-rem($sizeValue: 16px, $base: 16) {
+  font-size: $sizeValue; // pixels
+  font-size: (($sizeValue/$base)/1px) * 1rem; // rems
+}
+
+@mixin semi-black-bg {
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.3);
+}

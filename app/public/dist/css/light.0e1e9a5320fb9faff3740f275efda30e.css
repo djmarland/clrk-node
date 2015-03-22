@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #EEF1FF;
-  background: #31363D; }
+  color: #31363D;
+  background: #FFFFFF; }
 
 .a, h1 {
   font-size: 32px;
@@ -519,24 +519,24 @@ pre {
   padding: 12px;
   margin-bottom: 12px;
   background-color: #000;
-  background-color: rgba(0, 0, 0, 0.3); }
+  background-color: rgba(0, 0, 0, 0.5); }
 
 .h-box, blockquote {
-  background: #F9B53A;
-  color: #31363D;
+  background: #CF2E2E;
+  color: #FFFFFF;
   padding: 12px; }
 
 .h-color {
-  color: #F9B53A; }
+  color: #CF2E2E; }
 
 .h-bg {
-  background: #F9B53A; }
+  background: #CF2E2E; }
 
 input, textarea {
-  color: #EEF1FF; }
+  color: #31363D; }
 
 a {
-  color: #F9B53A; }
+  color: #CF2E2E; }
 
 input, textarea {
   border: none;

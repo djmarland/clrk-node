@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #EEF1FF;
-  background: #31363D; }
+  color: #31363D;
+  background: #FFFFFF; }
 
 .a, h1 {
   font-size: 32px;
@@ -430,7 +430,7 @@ p {
 .g-1-6 {
   width: 16.66666667%; }
 
-@media all and (min-width: 20em) {
+@media all and (min-width: pxtoem(320)) {
   /* 320px */
   .g-xs-1-1 {
     width: 100%; }
@@ -447,7 +447,7 @@ p {
   .g-xs-1-6 {
     width: 16.66666667%; } }
 
-@media all and (min-width: 30em) {
+@media all and (min-width: pxtoem(480)) {
   /* 480px */
   .g-s-1-1 {
     width: 100%; }
@@ -464,7 +464,7 @@ p {
   .g-s-1-6 {
     width: 16.66666667%; } }
 
-@media all and (min-width: 37.5em) {
+@media all and (min-width: pxtoem(600)) {
   /* 600px */
   .g-m-1-1 {
     width: 100%; }
@@ -481,7 +481,7 @@ p {
   .g-m-1-6 {
     width: 16.66666667%; } }
 
-@media all and (min-width: 48em) {
+@media all and (min-width: pxtoem(768)) {
   /* 768px */
   .g-l-1-1 {
     width: 100%; }
@@ -498,7 +498,7 @@ p {
   .g-l-1-6 {
     width: 16.66666667%; } }
 
-@media all and (min-width: 61em) {
+@media all and (min-width: pxtoem(976)) {
   /* 976px */
   .g-xl-1-1 {
     width: 100%; }
@@ -519,24 +519,13 @@ pre {
   padding: 12px;
   margin-bottom: 12px;
   background-color: #000;
-  background-color: rgba(0, 0, 0, 0.3); }
-
-.h-box, blockquote {
-  background: #F9B53A;
-  color: #31363D;
-  padding: 12px; }
-
-.h-color {
-  color: #F9B53A; }
-
-.h-bg {
-  background: #F9B53A; }
+  background-color: rgba(0, 0, 0, 0.5); }
 
 input, textarea {
-  color: #EEF1FF; }
+  color: #31363D; }
 
 a {
-  color: #F9B53A; }
+  color: #1160CA; }
 
 input, textarea {
   border: none;

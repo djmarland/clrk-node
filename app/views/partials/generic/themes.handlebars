@@ -1,0 +1,9 @@
+{{#each appSettings.themeOptions}}
+<div class="input-wrap {{ settingsForm.validationErrors.themeClass }}">
+    <label class="input-label" for="form-theme{{@key}}">{{ this }}</label>
+    <input type="radio" id="form-theme{{@key}}" name="theme" value="{{@key}}" {{ setChecked ../form.theme @key }}>
+</div>
+{{/each}}
+{{#if form.validationErrors.theme }}
+<p>{{ form.validationErrors.theme }}</p>
+{{/if}}

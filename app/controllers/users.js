@@ -44,15 +44,15 @@ exports.listAction = function (req, res, next) {
 exports.showAndEditAction = function (req, res, next) {
     var data = {
             user: req.viewedUser,
-            userForm: req.viewedUser,
+            form: req.viewedUser,
             userIsCurrent: req.viewedUser.matches(req.user)
         },
         err,
 
         render = function() {
-            data.userForm.action = data.user.url;
-            data.userForm.csrfToken = req.csrfToken();
-            data.userForm.canEditAdminStatus = data.canEditAdminStatus;
+            data.form.action = data.user.url;
+            data.form.csrfToken = req.csrfToken();
+            data.form.canEditAdminStatus = data.canEditAdminStatus;
             if (req.format == 'json') {
                 res.json(data);
             } else {
@@ -64,8 +64,7 @@ exports.showAndEditAction = function (req, res, next) {
     data.canEditAdminStatus = (!data.userIsCurrent && req.user.permissions.canSetAdmins);
 
     if (req.method === 'POST') {
-        data.userForm = req.body;
-        console.log(data.userForm);
+        data.form = req.body;
 
         if (!data.hasEditRights) {
             err = new Error;
@@ -73,7 +72,7 @@ exports.showAndEditAction = function (req, res, next) {
             err.status = 403;
             return next(err);
         }
-        if (data.userForm.isAdmin && !data.canEditAdminStatus) {
+        if (data.form.isAdmin && !data.canEditAdminStatus) {
             err = new Error;
             err.message = 'You do not have permission to do set admin status on this user';
             err.status = 403;
@@ -82,17 +81,18 @@ exports.showAndEditAction = function (req, res, next) {
 
         if (data.canEditAdminStatus) {
             // checkbox was present, so we must make sure its value appears in the data
-            if (data.userForm.isAdmin) {
+            if (data.form.isAdmin) {
                 // was set in the form
-                data.userForm.isAdmin = true;
+                data.form.isAdmin = true;
             } else {
                 // set to false (in case it didn't exist)
-                data.userForm.isAdmin = false;
+                data.form.isAdmin = false;
             }
         }
 
-        data.user.update(data.userForm)
+        data.user.update(data.form)
             .then(function(result) {
+                var permissionsCache = res.locals.loggedInUser.permissions;
                 res.locals.messages.push({
                     message : 'Saved successfully',
                     type : "success"
@@ -101,10 +101,19 @@ exports.showAndEditAction = function (req, res, next) {
                 req.viewedUser = data.user = result;
                 if (data.userIsCurrent) {
                     res.locals.loggedInUser = req.viewedUser;
+                    // restore previous permissions (you can't change them from this screen anyway)
+                    res.locals.loggedInUser.permissions = permissionsCache;
+
+                    // set the theme if it changed
+                    if (result.theme) {
+                        res.locals.themeCss = 'css/' + result.theme + '.css'
+                    } else {
+                        res.locals.themeCss = 'css/' + res.locals.appSettings.theme + '.css'
+                    }
                 }
             })
             .catch(function (err) {
-                utils.crud.setFormValidationErrors(data.userForm, res, err);
+                utils.crud.setFormValidationErrors(data.form, res, err);
             })
             .finally(function() {
                 render();

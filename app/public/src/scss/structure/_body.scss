@@ -1,0 +1,15 @@
+// These are the over-arching page infrastructure settings
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $font-family-global;
+}
+
+body {
+  padding : 48px;
+  color: $color-body-text;
+  background: $color-body-bg;
+}
+

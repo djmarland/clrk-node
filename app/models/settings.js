@@ -4,12 +4,19 @@ var utils = require('utils'),
     STATUS_NONE = 0,
     STATUS_INITIALISED = 1,
     STATUS_SUSPENDED = 2,
-    STATUS_WORDING = {};
+    STATUS_WORDING = {},
+
+    THEME_DARK = 'dark',
+    THEME_LIGHT = 'light',
+    THEME_WORDING = {};
 
 
     STATUS_WORDING[STATUS_NONE] = 'Not ready';
     STATUS_WORDING[STATUS_INITIALISED] = 'Application Initialised';
     STATUS_WORDING[STATUS_SUSPENDED] = 'Application Suspended';
+
+    THEME_WORDING[THEME_DARK] = 'Dark';
+    THEME_WORDING[THEME_LIGHT] = 'Light';
 
 module.exports = function(sequelize, DataTypes) {
     var Settings = sequelize.define(
@@ -35,6 +42,10 @@ module.exports = function(sequelize, DataTypes) {
             planExpiry : {
                 type: DataTypes.DATE,
                 field: "planExpiry"
+            },
+            theme : {
+                type: DataTypes.STRING,
+                field: "theme"
             }
         },
         {
@@ -46,6 +57,7 @@ module.exports = function(sequelize, DataTypes) {
 
                     // don't show sensitive data in JSON
                     delete values.id;
+                    delete values.themeOptions;
 
                     if (this.client) {
                         values.client = this.client.toJSON();
@@ -54,8 +66,14 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             getterMethods: {
-                statusWording : function() {
+                statusName : function() {
                     return STATUS_WORDING[this.status];
+                },
+                themeName : function() {
+                    return THEME_WORDING[this.theme];
+                },
+                themeOptions : function() {
+                    return THEME_WORDING;
                 }
             }
         }
@@ -74,7 +92,7 @@ module.exports = function(sequelize, DataTypes) {
                     reject(Error("Failed to fetch application settings " + e.message));
                 });
         });
-    }
+    };
 
     return Settings;
 };

@@ -30,13 +30,17 @@ exports.indexAction = function (req, res) {
     });
 };
 
+exports.styleguideAction = function (req, res) {
+    res.render('home/styleguide');
+};
+
 exports.settingsAction = function (req, res, next) {
     var data = {
-            settingsForm : req.appSettings
+            form : req.appSettings
         },
         render = function() {
             if (req.format == 'json') {
-                res.json(data.settingsForm);
+                res.json(data.form);
             } else {
                 res.render('home/settings', data);
             }
@@ -51,8 +55,8 @@ exports.settingsAction = function (req, res, next) {
     }
 
     if (req.method === 'POST') {
-        data.settingsForm = req.body;
-        req.appSettings.update(data.settingsForm)
+        data.form = req.body;
+        req.appSettings.update(data.form)
             .then(function(result) {
                 res.locals.messages.push({
                     message : 'Saved successfully',
@@ -60,9 +64,14 @@ exports.settingsAction = function (req, res, next) {
                 });
                 // override previously set data with the result
                 res.locals.appSettings = result;
+
+                // set the theme if it changed
+                if (!req.user.theme) {
+                    res.locals.themeCss = 'css/' + result.theme + '.css'
+                }
             })
             .catch(function (err) {
-                utils.crud.setFormValidationErrors(data.settingsForm, res, err);
+                utils.crud.setFormValidationErrors(data.form, res, err);
             })
             .finally(function() {
                 render();

@@ -67,6 +67,10 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.BOOLEAN,
                 field: "isAdmin"
             },
+            theme : {
+                type: DataTypes.STRING,
+                field: "theme"
+            },
             passwordHash: {
                 type: DataTypes.STRING,
                 field: "passwordHash"

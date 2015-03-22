@@ -3,13 +3,19 @@
 <div class="settings-form">
     <form action="{{ action }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <div class="input-wrap {{ settingsForm.validationErrors.applicationNameClass }}">
+        <div class="input-wrap {{ form.validationErrors.applicationNameClass }}">
             <label class="input-label" for="form-applicationName">Application Name</label>
-            <input class="input-head" type="text" required="true" name="applicationName" id="form-applicationName" value="{{ settingsForm.applicationName }}" />
-            {{#if settingsForm.validationErrors.applicationName }}
-            <p>{{ settingsForm.validationErrors.applicationName }}</p>
+            <input class="input-head" type="text" required="true" name="applicationName" id="form-applicationName" value="{{ form.applicationName }}" />
+            {{#if form.validationErrors.applicationName }}
+            <p>{{ form.validationErrors.applicationName }}</p>
             {{/if}}
         </div>
+        <h2>Colour Scheme</h2>
+        <p>The default colour scheme of the application to use when an individual user hasn't overridden it.</p>
+
+        {{> generic/themes this }}
+
+
         <div>
             <button type="submit">Save</button>
         </div>

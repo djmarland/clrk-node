@@ -1,0 +1,61 @@
+// General typography
+
+// keep this file more CSS like than SASS like
+// Too hard to read otherwise
+
+
+.a, h1, .b, h2, .c, h3, .d, h4, p, .e, h5, .f, h6, small {
+
+}
+
+
+.a, h1 {
+  @include px-to-rem($font-size-a);
+  font-weight: lighter;
+  line-height:1.2;
+}
+
+.b, h2 {
+  @include px-to-rem($font-size-b);
+  font-weight: lighter;
+  line-height:1.2;
+}
+
+.c, h3 {
+  @include px-to-rem($font-size-c);
+  font-weight: bold;
+  line-height:1.2;
+}
+
+.d, h4, body {
+  @include px-to-rem($font-size-d);
+  font-weight: normal;
+  line-height:1.6;
+}
+
+.e, h5 {
+  @include px-to-rem($font-size-e);
+  font-weight: bold;
+  line-height:1.6;
+}
+
+.f, h6, small {
+  @include px-to-rem($font-size-f);
+  text-transform: uppercase;
+  line-height:1.33333333;
+}
+
+p {
+  margin: 0 0 1em 0;
+}
+.prose p {
+  text-align: justify;
+  max-width: 768px;
+  max-width: 48rem;
+}
+.text--right {
+  text-align: right;
+}
+.text--center {
+  text-align: center;
+}

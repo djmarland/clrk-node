@@ -27,6 +27,9 @@ module.exports = function (app) {
                 // ensure the views can see the settings
                 res.locals.appSettings = result;
 
+                // set the default theme CSS
+                res.locals.themeCss = 'css/' + res.locals.appSettings.theme + '.css';
+
                 // continue
                 return next();
             })
@@ -85,6 +88,11 @@ module.exports = function (app) {
             };
             res.render('users/login', data);
         } else {
+            // a user was fetched. Override theme with the user preference
+            if (req.user.theme) {
+                res.locals.themeCss = 'css/' + req.user.theme + '.css';
+            }
+
             // ensure the permissions were fetched (later - should be via Permissions model)
             return models.group.findPermissionByUser(req.user)
                 .then(function(result) {
@@ -162,6 +170,7 @@ module.exports = function (app) {
      */
     app.get('/', home.indexAction);
     app.all('/settings.:format?', home.settingsAction);
+    app.get('/styleguide', home.styleguideAction);
 
 
     /**
