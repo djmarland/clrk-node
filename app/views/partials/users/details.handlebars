@@ -15,6 +15,15 @@
             <p>{{ validationErrors.email }}</p>
             {{/if}}
         </div>
+        {{#if canEditAdminStatus}}
+        <div class="input-wrap {{ validationErrors.isAdminClass }}">
+            <label class="input-label" for="form-isAdmin">Is Admin</label>
+            <input class="input-head" type="checkbox" name="isAdmin" id="form-isAdmin" value="true" {{#if isAdmin }}checked="checked" {{/if}} />
+            {{#if validationErrors.isAdmin }}
+            <p>{{ validationErrors.isAdmin }}</p>
+            {{/if}}
+        </div>
+        {{/if}}
         <div>
             <button type="submit">Save</button>
         </div>

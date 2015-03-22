@@ -85,8 +85,23 @@ module.exports = function (app) {
             };
             res.render('users/login', data);
         } else {
-            res.locals.loggedInUser = req.user;
-            next();
+            // ensure the permissions were fetched (later - should be via Permissions model)
+            return models.group.findPermissionByUser(req.user)
+                .then(function(result) {
+                    // apply the settings to the request
+                    req.user.permissions = result;
+
+                    // ensure the views can see the user
+                    res.locals.loggedInUser = req.user;
+
+                    // continue
+                    return next();
+                })
+                .catch(function(err) {
+                    // serious error. App must die
+                    err.status = 500;
+                    return next(err);
+                });
         }
     });
 

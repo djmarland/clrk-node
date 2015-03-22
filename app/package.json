@@ -31,5 +31,10 @@
     "sequelize": "^2.0.0",
     "sequelize-cli": "^1.0.5",
     "serve-favicon": "~2.2.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-sass": "^0.18.1"
   }
 }

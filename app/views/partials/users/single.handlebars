@@ -1,6 +1,11 @@
 <tr onclick="window.location.href = '{{ url }}'">
     <td><a href="{{ url }}">{{name}}</a></td>
     <td><a href="{{ url }}">{{email}}</a></td>
+    <td>{{#if isAdmin}}
+        <i class="fa fa-check"></i>
+        {{else}}
+        <i class="fa fa-close"></i>
+        {{/if}}</td>
     <td class="table__onward">
         <a href="{{ url }}"><i class="fa fa-arrow-right"></i></a>
     </td>

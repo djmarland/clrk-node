@@ -30,13 +30,25 @@ exports.indexAction = function (req, res) {
     });
 };
 
-exports.settingsAction = function (req, res) {
+exports.settingsAction = function (req, res, next) {
     var data = {
             settingsForm : req.appSettings
         },
         render = function() {
-            res.render('home/settings', data);
-        }
+            if (req.format == 'json') {
+                res.json(data.settingsForm);
+            } else {
+                res.render('home/settings', data);
+            }
+        },
+        err;
+
+    if (!req.user.permissions.canEditSettings) {
+        err = new Error;
+        err.message = 'You do not have permission to do this';
+        err.status = 403;
+        return next(err);
+    }
 
     if (req.method === 'POST') {
         data.settingsForm = req.body;

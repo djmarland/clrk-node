@@ -1,16 +1,11 @@
+{{#if user.isAdmin}}<p>ADMINISTRATOR</p>{{/if}}
+
 {{#if hasEditRights}}
 {{> users/details userForm }}{{!-- partial must NOT have indentation --}}
 {{else}}
 {{> users/display user }}{{!-- partial must NOT have indentation --}}
 {{/if}}
 
-
-<p>Is admin: {{#if user.isAdmin}}
-    <i class="fa fa-check"></i>
-{{else}}
-    <i class="fa fa-close"></i>
-{{/if}}
-</p>
 
 {{#if userIsCurrent}}
 <p><a href="/change-password">Change password</a></p>

@@ -21,6 +21,11 @@ module.exports = {
                     type: DataTypes.STRING,
                     allowNull: false
                 },
+                isAdmin: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false
+                },
                 email: DataTypes.STRING,
                 passwordHash: DataTypes.STRING,
                 passwordExpiry: DataTypes.DATE

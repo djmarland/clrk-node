@@ -1,6 +1,15 @@
 "use strict";
 
-var utils = require('utils');
+var utils = require('utils'),
+    STATUS_NONE = 0,
+    STATUS_INITIALISED = 1,
+    STATUS_SUSPENDED = 2,
+    STATUS_WORDING = {};
+
+
+    STATUS_WORDING[STATUS_NONE] = 'Not ready';
+    STATUS_WORDING[STATUS_INITIALISED] = 'Application Initialised';
+    STATUS_WORDING[STATUS_SUSPENDED] = 'Application Suspended';
 
 module.exports = function(sequelize, DataTypes) {
     var Settings = sequelize.define(
@@ -15,9 +24,9 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 field: "applicationName"
             },
-            initialised : {
-                type: DataTypes.BOOLEAN,
-                field: "initialised"
+            status : {
+                type: DataTypes.INTEGER,
+                field: "status"
             },
             planType : {
                 type: DataTypes.INTEGER,
@@ -30,6 +39,24 @@ module.exports = function(sequelize, DataTypes) {
         },
         {
             classMethods: {
+            },
+            instanceMethods: {
+                toJSON: function () {
+                    var values = this.values;
+
+                    // don't show sensitive data in JSON
+                    delete values.id;
+
+                    if (this.client) {
+                        values.client = this.client.toJSON();
+                    }
+                    return values;
+                }
+            },
+            getterMethods: {
+                statusWording : function() {
+                    return STATUS_WORDING[this.status];
+                }
             }
         }
     );

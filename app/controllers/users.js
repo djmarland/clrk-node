@@ -41,17 +41,18 @@ exports.listAction = function (req, res, next) {
         }).catch(next);
 };
 
-exports.showAndEditAction = function (req, res) {
+exports.showAndEditAction = function (req, res, next) {
     var data = {
             user: req.viewedUser,
             userForm: req.viewedUser,
             userIsCurrent: req.viewedUser.matches(req.user)
         },
+        err,
 
         render = function() {
             data.userForm.action = data.user.url;
             data.userForm.csrfToken = req.csrfToken();
-            data.hasEditRights = true; // @todo - check for rights
+            data.userForm.canEditAdminStatus = data.canEditAdminStatus;
             if (req.format == 'json') {
                 res.json(data);
             } else {
@@ -59,8 +60,37 @@ exports.showAndEditAction = function (req, res) {
             }
         };
 
+    data.hasEditRights = (data.userIsCurrent || req.user.permissions.canEditUsers);
+    data.canEditAdminStatus = (!data.userIsCurrent && req.user.permissions.canSetAdmins);
+
     if (req.method === 'POST') {
         data.userForm = req.body;
+        console.log(data.userForm);
+
+        if (!data.hasEditRights) {
+            err = new Error;
+            err.message = 'You do not have permission to do edit this user';
+            err.status = 403;
+            return next(err);
+        }
+        if (data.userForm.isAdmin && !data.canEditAdminStatus) {
+            err = new Error;
+            err.message = 'You do not have permission to do set admin status on this user';
+            err.status = 403;
+            return next(err);
+        }
+
+        if (data.canEditAdminStatus) {
+            // checkbox was present, so we must make sure its value appears in the data
+            if (data.userForm.isAdmin) {
+                // was set in the form
+                data.userForm.isAdmin = true;
+            } else {
+                // set to false (in case it didn't exist)
+                data.userForm.isAdmin = false;
+            }
+        }
+
         data.user.update(data.userForm)
             .then(function(result) {
                 res.locals.messages.push({

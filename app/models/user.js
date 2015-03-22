@@ -63,6 +63,10 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 }
             },
+            isAdmin: { // temporary way of handling admins
+                type: DataTypes.BOOLEAN,
+                field: "isAdmin"
+            },
             passwordHash: {
                 type: DataTypes.STRING,
                 field: "passwordHash"

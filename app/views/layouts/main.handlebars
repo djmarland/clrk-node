@@ -10,7 +10,9 @@
     <nav>
         <ul>
             <li><a href="/customers">Customers</a></li>
-            <li><a href="/settings">Admin settings</a></li>
+            {{#if loggedInUser.permissions.canEditSettings}}
+                <li><a href="/settings">Admin settings</a></li>
+            {{/if}}
         </ul>
     </nav>
 </div>

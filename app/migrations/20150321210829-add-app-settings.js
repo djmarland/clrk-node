@@ -22,10 +22,10 @@ module.exports = {
                     allowNull: false,
                     defaultValue : 'Application'
                 },
-                initialised : {
-                    type: DataTypes.BOOLEAN,
+                status : {
+                    type: DataTypes.INTEGER,
                     allowNull: false,
-                    defaultValue : false
+                    defaultValue : 0
                 },
                 planType : {
                     type: DataTypes.INTEGER,
@@ -38,7 +38,7 @@ module.exports = {
                 }
             }
         ).done(function(result) {
-            migration.sequelize.query('INSERT INTO "settings" DEFAULT VALUES').done(done);
+            migration.sequelize.query('INSERT INTO "settings" ("createdAt","updatedAt") VALUES (NOW(),NOW())').done(done);
         });
     },
 
