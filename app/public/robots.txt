@@ -1,0 +1,5 @@
+# Robots have no business attempting to scan the sub-domains
+# as you have to be logged in to be able to see it all
+
+User-agent: *
+Disallow: /
