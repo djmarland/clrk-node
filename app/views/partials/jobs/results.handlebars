@@ -1,0 +1,23 @@
+<div data-resultset data-resultsetnext="{{ pagination.nextPage }}">
+    {{#if jobs }}
+    <table class="table--summary">
+        <thead>
+        <tr>
+            <th>Reference</th>
+            <th>Customer</th>
+            <th>Title</th>
+            <th>Address</th>
+            <th class="table__onward">&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody data-source="jobs">
+        {{#each jobs}}
+        {{> job this }}
+        {{/each}}
+        </tbody>
+    </table>
+    {{> generic/paginator pagination }}
+    {{else}}
+    <p>No jobs were found for this query</p>
+    {{/if}}
+</div>

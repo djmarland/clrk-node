@@ -1,7 +1,9 @@
-
-<div>
-    <p>Title: {{ title }}</p>
-    {{#if customer}}
-    {{> customer customer }}
-    {{/if}}
-</div>
+<tr onclick="window.location.href = '{{ url }}'">
+    <td class="jb__ref"><a class="cs" href="{{ url }}">{{{ highlight key searchQuery }}}</a></td>
+    <td class="jb__customer"><a class="cs" href="{{ customer.url }}">{{ customer.name }}</a></td>
+    <td class="jb__title"><a class="cs" href="{{ url }}">{{{ highlight title searchQuery }}}</a></td>
+    <td class="jb__address"><a class="cs" href="{{ url }}">{{{ highlight inlineAddress searchQuery }}}</a></td>
+    <td class="table__onward">
+        <a class="jb" href="{{ url }}"><i class="fa fa-arrow-right"></i></a>
+    </td>
+</tr>

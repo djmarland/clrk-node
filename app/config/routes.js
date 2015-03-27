@@ -9,6 +9,7 @@
 var home        = require('controllers/home'),
     customers   = require('controllers/customers'),
     users       = require('controllers/users'),
+    jobs        = require('controllers/jobs'),
 
 
     models      = require('models');
@@ -260,6 +261,47 @@ module.exports = function (app) {
             })
             .catch(next);
     });
+
+    /**
+     * Jobs routes (in order of preference
+     */
+    app.get('/jobs.:format?', jobs.listAction);
+ //   app.get('/jobs/new', jobs.newAction);
+ ///   app.post('/jobs/new', jobs.createAction);
+ //   app.get('/jobs/search.:format?', jobs.searchAction);
+ //   app.post('/jobs/search', jobs.searchPostAction);
+    app.all('/jobs/:jobKey.:format?', jobs.showAndEditAction);
+ //   app.get('/jobs/:jobKey/versions.:format?', jobs.versionsListAction);
+ //   app.get('/jobs/:jobKey/versions/:versionKey.:format?', jobs.versionsShowAction);
+
+
+    app.param('jobKey', function(req, res, next, jobKey) {
+        var upperKey = jobKey.toUpperCase();
+        if (upperKey != jobKey) {
+            // @todo move this redirect into nginx (for all keys)
+            return res.redirect('/jobs/' + upperKey);
+        }
+
+        return models.job.findByKey(jobKey)
+            .then(function(job) {
+                if (!job) {
+                    var err = new Error;
+                    err.message = 'No such job';
+                    err.status = 404;
+                    return next(err);
+                }
+
+                // if the job version is a subversion, redirect
+                if (job.versionOfId) {
+                    return res.redirect(job.url);
+                }
+
+                req.job = job;
+                return next();
+            })
+            .catch(next);
+    });
+
 
 
     /**

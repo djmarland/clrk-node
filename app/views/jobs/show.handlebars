@@ -1,0 +1,14 @@
+<p>Job reference: {{ job.key }}</p>
+
+<h1>Title : {{ job.title }}</h1>
+<p>Address: {{ job.address }}</p>
+<p>Postcode: {{ job.postcode }}</p>
+
+<div>
+    <h2>Customer details</h2>
+    <table>
+        <tr>
+{{> customer job.customer }}
+        </tr>
+    </table>
+</div>
