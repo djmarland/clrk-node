@@ -5,7 +5,8 @@ module.exports = function() {
     return {
         // inflate the ID to give customer IDs the illusion of authority (big company)
         // not done in the database to avoid needing bigint too quickly
-        INFLATION: 1020304,
+        // this will be multiplied by the prefix
+        INFLATION: 12000,
 
         // remove vowels and 1/0 to reduce likelihood of words being formed
         ALLOWED_CHARACTERS : '23456789BCDFGHJKLMNPQRSTVWXYZ',
@@ -22,10 +23,21 @@ module.exports = function() {
             return this.toId(key);
         },
 
+        inflate : function(number, letter) {
+            var code = letter.charCodeAt(0);
+            return number + (this.INFLATION * code);
+        },
+
+        deflate : function(number, letter) {
+            var code = letter.charCodeAt(0);
+            return (number - (this.INFLATION * code));
+        },
+
         toId: function (key) {
             var id = 0,
                 power = 0,
                 base = this.ALLOWED_CHARACTERS.length,
+                prefix = key.charAt(0),
                 keyLen, i;
 
 
@@ -44,7 +56,7 @@ module.exports = function() {
                 power++;
             }
 
-            id = (id - this.INFLATION);
+            id = this.deflate(id, prefix);
 
             if (id > 0) {
                 return id;
@@ -58,7 +70,7 @@ module.exports = function() {
                 newId, pos;
 
             // inflate the key
-            id = id + this.INFLATION;
+            id = this.inflate(id, prefix);
 
             // convert id to key
             while (id > 0) {
@@ -69,7 +81,9 @@ module.exports = function() {
             }
 
             // pad the front to ensure it's at least 6 characters long
-            key = "000000".substring(0, 6 - key.length) + key
+            if (key.length < 6) {
+                key = "000000".substring(0, 6 - key.length) + key;
+            }
             return prefix + key;
         }
     };

@@ -76,9 +76,8 @@ input, textarea {
   padding:0;
 }
 .messages__msg {;
-  border-radius: 4px;
   padding: $spacing-default 18px;
-  border: solid 1px;
+  border: none;
   margin-bottom: $spacing-half;
 }
 .messages__msg:before {
@@ -87,28 +86,38 @@ input, textarea {
 }
 
 .messages__msg--info {
-  background: #ccccff;
-  color: #4444cc;
-  border-color: #4444cc;
+  background: #4444cc;
+  color: #fff;
 }
 .messages__msg--info:before {
   content: 'i';
 }
 
-.messages__msg--error,
-.input-wrap.error{
-  background: #ffcccc;
-  color: #ff4444;
-  border-color: #ff4444;
+.messages__msg--error {
+  background: #ff4444;
+  color: #fff;
 }
+
+.input-wrap.error{
+  color: #ff4444;
+}
+
+.error .input-label {
+  color: #ff4444;
+}
+.error input,
+.error textarea {
+  color: #ff4444;
+  border-bottom-color: #ff4444
+}
+
 .messages__msg--error:before {
   content: 'X';
 }
 
 .messages__msg--success {
-  background: #ccffcc;
-  color: #229922;
-  border-color: #229922;
+  background: #229922;
+  color: #fff;
 }
 .messages__msg--success:before {
   content: '\\o/';
@@ -160,13 +169,14 @@ input, textarea {
   padding: $spacing-default;
   cursor: pointer;
 }
+button,
 .btn:hover,
 .btn:active,
 .btn:focus{
   background: #111;
 }
 
-
+/*
 @-webkit-keyframes fadeout {
   0%, 50%   { opacity: 1}
   100% { opacity: 0 }
@@ -177,8 +187,8 @@ input, textarea {
 }
 
 .messages__msg {
-  -webkit-animation: fadeout 6s ease-in forwards; /* Safari 4+ */
-  animation:         fadeout 6s ease-in forwards; /* IE 10+, Fx 29+ */
+  -webkit-animation: fadeout 6s ease-in forwards; // Safari 4+
+  animation:         fadeout 6s ease-in forwards; // IE 10+, Fx 29+
 }
 
 .messages__msg:nth-child(1) {
@@ -200,3 +210,4 @@ input, textarea {
   -webkit-animation-delay: 1.6s;
   animation-delay: 1.6s;
 }
+*/

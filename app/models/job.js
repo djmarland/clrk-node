@@ -15,7 +15,13 @@ module.exports = function(sequelize, DataTypes) {
             },
             title: {
                 type: DataTypes.STRING,
-                field: "title"
+                field: "title",
+                allowNull : false,
+                validate: {
+                    notEmpty: {
+                        msg: 'Job must have a title'
+                    }
+                }
             },
             address: {
                 type: DataTypes.STRING,
@@ -23,7 +29,14 @@ module.exports = function(sequelize, DataTypes) {
             },
             postcode: {
                 type: DataTypes.STRING,
-                field: "postcode"
+                field: "postcode",
+                validate: {
+                    fn: function(val) {
+                        if (val && !utils.postcode.isValid(val)) {
+                            throw new utils.errors.invalidPostcode();
+                        }
+                    }
+                }
             },
             customerId : {
                 type: DataTypes.INTEGER,
@@ -36,6 +49,23 @@ module.exports = function(sequelize, DataTypes) {
             classMethods: {
                 associate: function (models) {
                     Job.belongsTo(models.customer, { foreignKey: "customerId" });
+                }
+            },
+            instanceMethods: {
+                onSave : function() {
+
+                    // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
+                    if (!this.changed()) {
+                        // nothing changed
+                        throw new utils.errors.noChange();
+                        throw new function() {
+                            this.type = 'nochange';
+                        };
+                    }
+
+                    if (!this.isNewRecord) {
+                       // this.copyToVersion();
+                    }
                 }
             },
             getterMethods: {
@@ -51,22 +81,27 @@ module.exports = function(sequelize, DataTypes) {
                     return '/jobs/' + this.key;
                 },
                 inlineAddress : function() {
-                    var inititalparts = this.address.split(/\n/),
-                        finalParts = [];
-
-                    if (this.address) {
-                        inititalparts.forEach(function (part) {
-                            part = part.trim();
-                            if (part) {
-                                finalParts.push(part.trim().trim(',').trim());
-                            }
-                        });
+                    return utils.address.inline(this);
+                }
+            },
+            hooks: {
+                beforeCreate: function(job, options, fn) {
+                    job.onSave();
+                    fn(null, job);
+                },
+                beforeUpdate: function(job, options, fn) {
+                    job.onSave();
+                    fn(null, job);
+                },
+                afterValidate: function(job, options, fn) {
+                    var postcode;
+                    if (job.postcode) {
+                        postcode = utils.postcode.format(job.postcode);
+                        if (postcode) {
+                            job.setDataValue('postcode',postcode);
+                        }
                     }
-                    if (this.postcode) {
-                        finalParts.push(this.postcode);
-                    }
-
-                    return finalParts.join(', ');
+                    fn(null, job);
                 }
             }
         }
@@ -157,6 +192,17 @@ module.exports = function(sequelize, DataTypes) {
         });
     };
 
+
+    Job.new = function(data) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Job.create(data)
+                .then(function(job) {
+                    resolve(job);
+                }).catch(function(e) {
+                    reject(e)
+                });
+        });
+    };
 
     return Job;
 };

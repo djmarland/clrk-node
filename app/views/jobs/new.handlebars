@@ -1,0 +1,128 @@
+<h1>New Job</h1>
+
+<div class="job-form">
+    <form action="{{ action }}" method="post">
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        <h2>Location/Contact details</h2>
+        <div class="input-wrap {{ validationErrors.customerNameClass }}">
+            <label class="input-label" for="form-customerName">Customer Name</label>
+            <input class="input-head" required="true" type="text" name="customerName" id="form-customerName" value="{{ customerName }}" />
+            {{#if validationErrors.customerName }}
+            <p>{{ validationErrors.customerName }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.addressClass }}">
+            <label class="input-label" for="form-address">Job Address</label>
+            <textarea name="address" id="form-address">{{ address }}</textarea>
+            {{#if validationErrors.address }}
+            <p>{{ validationErrors.address }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.postcodeClass }}">
+            <label class="input-label" for="form-postcode">Job Postcode</label>
+            <input type="text" name="postcode" id="form-postcode" value="{{ postcode }}" />
+            {{#if validationErrors.postcode }}
+            <p>{{ validationErrors.postcode }}</p>
+            {{/if}}
+        </div>
+
+        <hr />
+
+        <h2>Customer details</h2>
+        <div class="input-wrap {{ validationErrors.customerKeyClass }}">
+            <label class="input-label" for="form-customerKey">Customer key</label>
+            <input type="text" name="customerKey" id="form-customerKey" value="{{ customerKey }}" />
+            {{#if validationErrors.customerKey }}
+            <p>{{ validationErrors.customerKey }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.customerTelephoneClass }}">
+            <label class="input-label" for="form-customerTelephone">Customer phone number</label>
+            <input type="text" name="customerTelephone" id="form-customerTelephone" value="{{ customerTelephone }}" />
+            {{#if validationErrors.customerTelephone }}
+            <p>{{ validationErrors.customerTelephone }}</p>
+            {{/if}}
+        </div>
+        <!-- Entering a name, address or postcode should start searching customers for you to choose
+            one -->
+
+        <hr />
+
+        <h2>Job details</h2>
+        <div class="input-wrap {{ validationErrors.typeIdClass }}">
+            <label class="input-label" required="true" for="form-typeId">Type ID</label>
+            <input type="text" name="typeId" id="form-typeId" value="{{ typeId }}" />
+            {{#if validationErrors.typeId }}
+            <p>{{ validationErrors.typeId }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.newTypeClass }}">
+            <label class="input-label" for="form-newType">New type</label>
+            <input type="text" name="newType" id="form-newType" value="{{ newType }}" />
+            {{#if validationErrors.newType }}
+            <p>{{ validationErrors.newType }}</p>
+            {{/if}}
+        </div>
+        <!-- choosing a type will pre-fill the title field -->
+
+        <div class="input-wrap {{ validationErrors.titleClass }}">
+            <label class="input-label" for="form-title">Title</label>
+            <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ title }}" />
+            {{#if validationErrors.title }}
+            <p>{{ validationErrors.title }}</p>
+            {{/if}}
+        </div>
+
+
+
+
+        <hr />
+
+        <h2>Scheduling</h2>
+        <!-- should be replaced with a simple interface -->
+
+
+        <div class="input-wrap {{ validationErrors.scheduledStartDateClass }}">
+            <label class="input-label" for="form-scheduledStartDate">Scheduled start Date</label>
+            <input type="date" name="scheduledStartDate" id="form-scheduledStartDate" value="{{ scheduledStartDate }}" />
+            {{#if validationErrors.scheduledStartDate }}
+            <p>{{ validationErrors.scheduledStartDate }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.scheduledStartTimeClass }}">
+            <label class="input-label" for="form-scheduledStartTime">Scheduled start Time</label>
+            <input type="time" name="scheduledStartTime" id="form-scheduledStartTime" value="{{ scheduledStartTime }}" />
+            {{#if validationErrors.scheduledStartTime }}
+            <p>{{ validationErrors.scheduledStartTime }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.scheduledEndDateClass }}">
+            <label class="input-label" for="form-scheduledEndDate">Scheduled end Date</label>
+            <input type="date" name="scheduledEndDate" id="form-scheduledEndDate" value="{{ scheduledEndDate }}" />
+            {{#if validationErrors.scheduledEndDate }}
+            <p>{{ validationErrors.scheduledEndDate }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.scheduledEndTimeClass }}">
+            <label class="input-label" for="form-scheduledEndTime">Scheduled end Time</label>
+            <input type="time" name="scheduledEndTime" id="form-scheduledEndTime" value="{{ scheduledEndTime }}" />
+            {{#if validationErrors.scheduledEndTime }}
+            <p>{{ validationErrors.scheduledEndTime }}</p>
+            {{/if}}
+        </div>
+
+
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>

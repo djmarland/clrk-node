@@ -664,38 +664,38 @@ input, textarea {
 button, .btn:hover, .btn:active, .btn:focus {
   background: #111; }
 
-/*
 @-webkit-keyframes fadeout {
-  0%, 50%   { opacity: 1}
-  100% { opacity: 0 }
-}
+  0%, 50% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0; } }
+
 @keyframes fadeout {
-  0%, 50%   { opacity: 1}
-  100% { opacity: 0 }
-}
+  0%, 50% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0; } }
 
 .messages__msg {
-  -webkit-animation: fadeout 6s ease-in forwards; // Safari 4+
-  animation:         fadeout 6s ease-in forwards; // IE 10+, Fx 29+
-}
+  -webkit-animation: fadeout 6s ease-in forwards;
+  /* Safari 4+ */
+  animation: fadeout 6s ease-in forwards;
+  /* IE 10+, Fx 29+ */ }
 
 .messages__msg:nth-child(1) {
   -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
-}
+  animation-delay: 0.4s; }
 
 .messages__msg:nth-child(2) {
   -webkit-animation-delay: 0.8s;
-  animation-delay: 0.8s;
-}
+  animation-delay: 0.8s; }
 
 .messages__msg:nth-child(3) {
   -webkit-animation-delay: 1.2s;
-  animation-delay: 1.2s;
-}
+  animation-delay: 1.2s; }
 
 .messages__msg:nth-child(4) {
   -webkit-animation-delay: 1.6s;
-  animation-delay: 1.6s;
-}
-*/
+  animation-delay: 1.6s; }

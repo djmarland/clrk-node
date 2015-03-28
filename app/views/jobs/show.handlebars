@@ -1,14 +1,31 @@
-<p>Job reference: {{ job.key }}</p>
-
-<h1>Title : {{ job.title }}</h1>
-<p>Address: {{ job.address }}</p>
-<p>Postcode: {{ job.postcode }}</p>
-
-<div>
+<div style="float:right;width: 39%">
+    <p>Job reference: {{ job.key }}</p>
     <h2>Customer details</h2>
     <table>
         <tr>
-{{> customer job.customer }}
+            {{> customer job.customer }}
         </tr>
     </table>
+
+</div>
+
+<div style="float:left;width: 60%">
+
+    {{#if hasEditRights}}
+    {{> jobs/details jobForm }}{{!-- partial must NOT have indentation --}}
+    {{else}}
+    {{> jobs/display job }}{{!-- partial must NOT have indentation --}}
+    {{/if}}
+</div>
+
+
+
+<div style="clear:both">
+
+    <p>Last updated: {{ datetime job.updatedAt }} by <a href="{{ job.Editor.url }}">{{ job.Editor.name }}</a></p>
+    {{#if previousVersionCount}}
+    <p><a href="/jobs/{{ job.key }}/versions">
+        {{ previousVersionCount }} previous versions. See all <i class="fa fa-arrow-right"></i>
+    </a></p>
+    {{/if}}
 </div>

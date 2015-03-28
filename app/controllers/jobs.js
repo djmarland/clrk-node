@@ -81,3 +81,39 @@ exports.showAndEditAction = function (req, res, next) {
     }
 
 };
+
+
+exports.newAction = function (req, res) {
+    res.render('jobs/new', {
+        jobForm : {
+            action : '/jobs/new',
+            csrfToken : req.csrfToken()
+        }
+    });
+};
+
+exports.createAction = function (req, res, next) {
+    var data = {
+        jobForm : req.body
+    };
+    data.jobForm.editedById = req.user.id;
+    // if a customer key was not set
+    // create a customer, and get its ID
+
+    models.job.new(data.jobForm)
+        .then(function(result) {
+            // all was good
+            req.flash('msg',{
+                message : result.title + ' was created as a job and saved',
+                type : "success"
+            });
+            // redirect to job page
+            res.redirect(result.url);
+        })
+        .catch(function(err) {
+            data.jobForm.action = '/jobs/new';
+            data.jobForm.csrfToken = req.csrfToken();
+            utils.crud.setFormValidationErrors(data.jobForm, res, err);
+            res.render('jobs/new', data);
+        });
+};

@@ -266,8 +266,8 @@ module.exports = function (app) {
      * Jobs routes (in order of preference
      */
     app.get('/jobs.:format?', jobs.listAction);
- //   app.get('/jobs/new', jobs.newAction);
- ///   app.post('/jobs/new', jobs.createAction);
+    app.get('/jobs/new', jobs.newAction);
+    app.post('/jobs/new', jobs.createAction);
  //   app.get('/jobs/search.:format?', jobs.searchAction);
  //   app.post('/jobs/search', jobs.searchPostAction);
     app.all('/jobs/:jobKey.:format?', jobs.showAndEditAction);

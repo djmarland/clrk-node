@@ -23,9 +23,9 @@ module.exports = function() {
             } else {
                 // general error
                 res.locals.messages.push({
-                    message : 'Error saving data. Please try again',
-                    type : "error",
-                    debug : err.message
+                    message: err.msg || 'Error saving data. Please try again',
+                    type: err.msgType || "error",
+                    debug: err.message
                 });
             }
         }

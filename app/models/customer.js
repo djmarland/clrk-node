@@ -49,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
                 validate: {
                     fn: function(val) {
                         if (val && !utils.postcode.isValid(val)) {
-                            throw new Error("Not a valid UK postcode in the format AB12 3CD");
+                            throw new utils.errors.invalidPostcode();
                         }
                     }
                 }
@@ -69,15 +69,14 @@ module.exports = function(sequelize, DataTypes) {
             },
             instanceMethods : {
                 onSave : function() {
-                    var err;
                     this.lastName = (this.name.split(" ").slice(-1).pop()).toLowerCase();
 
                     // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
                     if (!this.changed()) {
                         // nothing changed
-                        err = new Error;
-                        err.message = 'No changes were made';
-                        throw err;
+                        throw new function() {
+                            this.type = 'nochange';
+                        };
                     }
 
                     if (!this.isNewRecord) {
@@ -116,22 +115,7 @@ module.exports = function(sequelize, DataTypes) {
                     return '/customers/' + this.key;
                 },
                 inlineAddress : function() {
-                    var inititalparts = this.address.split(/\n/),
-                        finalParts = [];
-
-                    if (this.address) {
-                        inititalparts.forEach(function (part) {
-                            part = part.trim();
-                            if (part) {
-                                finalParts.push(part.trim().trim(',').trim());
-                            }
-                        });
-                    }
-                    if (this.postcode) {
-                        finalParts.push(this.postcode);
-                    }
-
-                    return finalParts.join(', ');
+                    return utils.address.inline(this);
                 }
             },
             hooks: {

@@ -2,7 +2,7 @@
 
 <div style="float:right;width: 39%">
     <p>Customer reference: {{ customer.key }}</p>
-    <p>Last updated: {{ customer.updatedAt }} by <a href="{{ customer.Editor.url }}">{{ customer.Editor.name }}</a></p>
+    <p>Last updated: {{ datetime customer.updatedAt }} by <a href="{{ customer.Editor.url }}">{{ customer.Editor.name }}</a></p>
     {{#if previousVersionCount}}
         <p><a href="/customers/{{ customer.key }}/versions">
             {{ previousVersionCount }} previous versions. See all <i class="fa fa-arrow-right"></i>

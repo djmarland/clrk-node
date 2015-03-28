@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #31363D;
-  background: #FFFFFF; }
+  color: #EEF1FF;
+  background: #31363D; }
 
 .a, h1 {
   font-size: 32px;
@@ -522,21 +522,21 @@ pre {
   background-color: rgba(0, 0, 0, 0.3); }
 
 .h-box, blockquote {
-  background: #CF2E2E;
-  color: #FFFFFF;
+  background: #F9B53A;
+  color: #31363D;
   padding: 12px; }
 
 .h-color {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 .h-bg {
-  background: #CF2E2E; }
+  background: #F9B53A; }
 
 input, textarea {
-  color: #31363D; }
+  color: #EEF1FF; }
 
 a {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 input, textarea {
   border: none;
@@ -582,8 +582,9 @@ input, textarea {
   padding: 0; }
 
 .messages__msg {
+  border-radius: 4px;
   padding: 12px 18px;
-  border: none;
+  border: solid 1px;
   margin-bottom: 6px; }
 
 .messages__msg:before {
@@ -591,15 +592,17 @@ input, textarea {
   font-weight: bold; }
 
 .messages__msg--info {
-  background: #4444cc;
-  color: #fff; }
+  background: #ccccff;
+  color: #4444cc;
+  border-color: #4444cc; }
 
 .messages__msg--info:before {
   content: 'i'; }
 
 .messages__msg--error {
-  background: #ff4444;
-  color: #fff; }
+  background: #ffcccc;
+  color: #ff4444;
+  border-color: #ff4444; }
 
 .input-wrap.error {
   color: #ff4444; }
@@ -615,8 +618,9 @@ input, textarea {
   content: 'X'; }
 
 .messages__msg--success {
-  background: #229922;
-  color: #fff; }
+  background: #ccffcc;
+  color: #229922;
+  border-color: #229922; }
 
 .messages__msg--success:before {
   content: '\\o/'; }
@@ -664,38 +668,38 @@ input, textarea {
 button, .btn:hover, .btn:active, .btn:focus {
   background: #111; }
 
-/*
 @-webkit-keyframes fadeout {
-  0%, 50%   { opacity: 1}
-  100% { opacity: 0 }
-}
+  0%, 50% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0; } }
+
 @keyframes fadeout {
-  0%, 50%   { opacity: 1}
-  100% { opacity: 0 }
-}
+  0%, 50% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0; } }
 
 .messages__msg {
-  -webkit-animation: fadeout 6s ease-in forwards; // Safari 4+
-  animation:         fadeout 6s ease-in forwards; // IE 10+, Fx 29+
-}
+  -webkit-animation: fadeout 6s ease-in forwards;
+  /* Safari 4+ */
+  animation: fadeout 6s ease-in forwards;
+  /* IE 10+, Fx 29+ */ }
 
 .messages__msg:nth-child(1) {
   -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
-}
+  animation-delay: 0.4s; }
 
 .messages__msg:nth-child(2) {
   -webkit-animation-delay: 0.8s;
-  animation-delay: 0.8s;
-}
+  animation-delay: 0.8s; }
 
 .messages__msg:nth-child(3) {
   -webkit-animation-delay: 1.2s;
-  animation-delay: 1.2s;
-}
+  animation-delay: 1.2s; }
 
 .messages__msg:nth-child(4) {
   -webkit-animation-delay: 1.6s;
-  animation-delay: 1.6s;
-}
-*/
+  animation-delay: 1.6s; }

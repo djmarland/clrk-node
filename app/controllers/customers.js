@@ -115,7 +115,7 @@ exports.createAction = function (req, res, next) {
     var data = {
         customerForm : req.body
     };
-    data.customerForm.editedById = 1;
+    data.customerForm.editedById = req.user.id;
     models.customer.new(data.customerForm)
         .then(function(result) {
             // all was good

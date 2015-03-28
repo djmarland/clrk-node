@@ -1,0 +1,31 @@
+<div class="job-form">
+    <form action="{{ action }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <div class="input-wrap {{ validationErrors.titleClass }}">
+            <label class="input-label" for="form-title">Title</label>
+            <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ title }}" />
+            {{#if validationErrors.title }}
+            <p>{{ validationErrors.title }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.addressClass }}">
+            <label class="input-label" for="form-address">Address</label>
+            <textarea name="address" id="form-address">{{ address }}</textarea>
+            {{#if validationErrors.address }}
+            <p>{{ validationErrors.address }}</p>
+            {{/if}}
+        </div>
+
+        <div class="input-wrap {{ validationErrors.postcodeClass }}">
+            <label class="input-label" for="form-postcode">Postcode</label>
+            <input type="text" name="postcode" id="form-postcode" value="{{ postcode }}" />
+            {{#if validationErrors.postcode }}
+            <p>{{ validationErrors.postcode }}</p>
+            {{/if}}
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>
