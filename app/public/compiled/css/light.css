@@ -539,12 +539,12 @@ a {
   color: #CF2E2E; }
 
 input, textarea {
-  border: none;
-  border-bottom: solid 1px #999999;
+  border: solid 1px #ddd;
+  border-bottom-color: #999999;
   width: 100%;
   font-family: sans-serif;
   background: transparent;
-  padding-right: 64px; }
+  padding: 12px 64px 12px 12px; }
 
 .input-wrap textarea {
   resize: none;
@@ -560,8 +560,8 @@ input, textarea {
 
 .input-label {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: 6px;
+  right: 12px;
   font-size: 14px;
   color: #999999; }
 

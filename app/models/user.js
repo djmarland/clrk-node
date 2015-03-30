@@ -119,6 +119,7 @@ module.exports = function(sequelize, DataTypes) {
             classMethods: {
                 associate: function (models) {
                     User.hasMany(models.customer, { foreignKey: "editedById" });
+                    User.hasMany(models.job, { foreignKey: "editedById" });
                 }
             },
             instanceMethods: {

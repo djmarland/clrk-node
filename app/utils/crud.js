@@ -7,14 +7,19 @@
 
 module.exports = function() {
     return {
-        setFormValidationErrors : function(form, res, err) {
+        setFormValidationErrors : function(form, res, err, mapping) {
             if (err.name === 'SequelizeValidationError') {
                 err.errors.forEach(function(e) {
+                    var path = e.path;
                     if (!form.validationErrors) {
                         form.validationErrors = {};
                     }
-                    form.validationErrors[e.path] = e.message;
-                    form.validationErrors[e.path + 'Class'] = 'error';
+
+                    if (mapping && mapping[path]) {
+                        path = mapping[path];
+                    }
+                    form.validationErrors[path] = e.message;
+                    form.validationErrors[path + 'Class'] = 'error';
                     res.locals.messages.push({
                         message : e.message,
                         type : "error"

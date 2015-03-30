@@ -236,9 +236,10 @@ module.exports = function (app) {
                 }
 
                 // if the customer version is a subversion, redirect
-                if (customer.versionOfId) {
-                    return res.redirect(customer.url);
-                }
+                // NOT needed, as the query doesn't allow versions
+                //if (customer.versionOfId) {
+                //    return res.redirect(customer.url);
+                //}
 
                 req.customer = customer;
                 return next();
@@ -247,7 +248,7 @@ module.exports = function (app) {
     });
 
     app.param('versionKey', function(req, res, next, versionKey) {
-        return models.customer.findByKey(versionKey)
+        return models.customer.findByKey(versionKey, true)
             .then(function(version) {
                 if (!version) {
                     var err = new Error;

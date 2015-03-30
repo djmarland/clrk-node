@@ -6,8 +6,9 @@ var utils = require('utils'),
     STATUS_SUSPENDED = 2,
     STATUS_WORDING = {},
 
-    THEME_DARK = 'dark',
+    THEME_DARK  = 'dark',
     THEME_LIGHT = 'light',
+    THEME_HC    = 'hc',
     THEME_WORDING = {};
 
 
@@ -15,8 +16,9 @@ var utils = require('utils'),
     STATUS_WORDING[STATUS_INITIALISED] = 'Application Initialised';
     STATUS_WORDING[STATUS_SUSPENDED] = 'Application Suspended';
 
-    THEME_WORDING[THEME_DARK] = 'Dark';
-    THEME_WORDING[THEME_LIGHT] = 'Light';
+    THEME_WORDING[THEME_DARK]   = 'Dark';
+    THEME_WORDING[THEME_LIGHT]  = 'Light';
+    THEME_WORDING[THEME_HC]     = 'High Contrast';
 
 module.exports = function(sequelize, DataTypes) {
     var Settings = sequelize.define(

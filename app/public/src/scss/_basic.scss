@@ -28,12 +28,13 @@ a {
 }
 
 input, textarea {
-  border: none;
-  border-bottom: solid 1px $color-keyline;
+  border: solid 1px $color-subtleline;
+  border-bottom-color: $color-keyline;
   width: 100%;
   font-family: $font-family-global;
   background: transparent;
-  padding-right: 64px;
+  padding: $spacing-default 64px $spacing-default $spacing-default;
+
 }
 
 .input-wrap textarea {
@@ -51,8 +52,8 @@ input, textarea {
 }
 .input-label {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: $spacing-half;
+  right: $spacing-default;
   font-size: 14px;
   color: $color-keyline;
 }

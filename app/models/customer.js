@@ -141,19 +141,25 @@ module.exports = function(sequelize, DataTypes) {
         }
     );
 
-    Customer.findByKey = function(key) {
+    Customer.findByKey = function(key, allowVersion) {
         var id = utils.key.toId(key);
         // keys haven't been converted yet
-        return Customer.findById(id);
+        return Customer.findById(id, allowVersion);
     };
 
-    Customer.findById = function(id) {
+    Customer.findById = function(id, allowVersion) {
         return new sequelize.Promise(function(resolve, reject) {
-            var models = require('models');
+            var models = require('models'),
+                where = {
+                    id: id,
+                    versionOfId : null // default state
+                };
+
+            if (allowVersion) {
+                delete where.versionOfId;
+            }
             Customer.findOne({
-                where: {
-                    id: id
-                },
+                where: where,
                 limit: 1,
                 include: [{
                     model : models.user,

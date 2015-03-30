@@ -23,6 +23,18 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 }
             },
+            versionOfId: {
+                type: DataTypes.INTEGER,
+                references : "job",
+                referencesKey : "id",
+                field: "versionOfId"
+            },
+            editedById: {
+                type: DataTypes.INTEGER,
+                references : "users",
+                referencesKey : "id",
+                field: "editedById"
+            },
             address: {
                 type: DataTypes.STRING,
                 field: "address"
@@ -43,12 +55,44 @@ module.exports = function(sequelize, DataTypes) {
                 references : "customers",
                 referencesKey : "id",
                 field: "customerId"
+            },
+            status : {
+                type: DataTypes.INTEGER,
+                field: "status"
+            },
+            typeId : {
+                type: DataTypes.INTEGER,
+                references : "types",
+                referencesKey : "id",
+                field: "typeId"
+            },
+            completionDate : {
+                type: DataTypes.DATE
+            },
+            scheduledStart : {
+                type: DataTypes.DATE
+            },
+            scheduledEnd : {
+                type: DataTypes.DATE
+            },
+            description : {
+                type: DataTypes.TEXT
             }
         },
         {
             classMethods: {
                 associate: function (models) {
                     Job.belongsTo(models.customer, { foreignKey: "customerId" });
+                    Job.hasMany(models.job, { foreignKey: "versionOfId" });
+                    Job.belongsTo(models.job, { foreignKey: "versionOfId" });
+                    Job.belongsTo(models.user, {
+                        as : "Editor",
+                        foreignKey: "editedById"
+                    });
+                    Job.belongsTo(models.type, {
+                        as : "Type",
+                        foreignKey: "typeId"
+                    });
                 }
             },
             instanceMethods: {
@@ -64,8 +108,25 @@ module.exports = function(sequelize, DataTypes) {
                     }
 
                     if (!this.isNewRecord) {
-                       // this.copyToVersion();
+                        this.copyToVersion();
                     }
+                },
+                copyToVersion : function() {
+                    var self = this,
+                        originalId = this.id,
+                        attributes = this._previousDataValues,
+                        query = 'insert',
+                        args;
+
+                    delete attributes.id; // remove the 'id' field so it can be reset
+                    attributes.versionOfId = originalId;
+
+                    args = [self, self.Model.getTableName(), attributes, {}];
+
+                    return self.QueryInterface[query].apply(self.QueryInterface, args)
+                        .then(function(result) {
+                            return result;
+                        });
                 }
             },
             getterMethods: {
@@ -178,11 +239,17 @@ module.exports = function(sequelize, DataTypes) {
                     id: id
                 },
                 limit: 1,
-                include: [ models.customer ]
-            /*    include: [{
-                    model : models.user,
-                    as : "Editor"
-                }] */
+                include: [
+                    models.customer,
+                    {
+                        model : models.user,
+                        as : "Editor"
+                    },
+                    {
+                        model : models.type,
+                        as : "Type"
+                    }
+                ]
             })
                 .then(function(result) {
                     resolve(result);

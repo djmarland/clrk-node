@@ -519,7 +519,7 @@ pre {
   padding: 12px;
   margin-bottom: 12px;
   background-color: #000;
-  background-color: rgba(0, 0, 0, 0.5); }
+  background-color: rgba(0, 0, 0, 0.3); }
 
 .h-box, blockquote {
   background: #CF2E2E;
@@ -539,12 +539,12 @@ a {
   color: #CF2E2E; }
 
 input, textarea {
-  border: none;
-  border-bottom: solid 1px #999999;
+  border: solid 1px #ddd;
+  border-bottom-color: #999999;
   width: 100%;
   font-family: sans-serif;
   background: transparent;
-  padding-right: 64px; }
+  padding: 12px 64px 12px 12px; }
 
 .input-wrap textarea {
   resize: none;
@@ -560,8 +560,8 @@ input, textarea {
 
 .input-label {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: 6px;
+  right: 12px;
   font-size: 14px;
   color: #999999; }
 
@@ -582,9 +582,8 @@ input, textarea {
   padding: 0; }
 
 .messages__msg {
-  border-radius: 4px;
   padding: 12px 18px;
-  border: solid 1px;
+  border: none;
   margin-bottom: 6px; }
 
 .messages__msg:before {
@@ -592,25 +591,32 @@ input, textarea {
   font-weight: bold; }
 
 .messages__msg--info {
-  background: #ccccff;
-  color: #4444cc;
-  border-color: #4444cc; }
+  background: #4444cc;
+  color: #fff; }
 
 .messages__msg--info:before {
   content: 'i'; }
 
-.messages__msg--error, .input-wrap.error {
-  background: #ffcccc;
+.messages__msg--error {
+  background: #ff4444;
+  color: #fff; }
+
+.input-wrap.error {
+  color: #ff4444; }
+
+.error .input-label {
+  color: #ff4444; }
+
+.error input, .error textarea {
   color: #ff4444;
-  border-color: #ff4444; }
+  border-bottom-color: #ff4444; }
 
 .messages__msg--error:before {
   content: 'X'; }
 
 .messages__msg--success {
-  background: #ccffcc;
-  color: #229922;
-  border-color: #229922; }
+  background: #229922;
+  color: #fff; }
 
 .messages__msg--success:before {
   content: '\\o/'; }
@@ -655,41 +661,41 @@ input, textarea {
   padding: 12px;
   cursor: pointer; }
 
-.btn:hover, .btn:active, .btn:focus {
+button, .btn:hover, .btn:active, .btn:focus {
   background: #111; }
 
+/*
 @-webkit-keyframes fadeout {
-  0%, 50% {
-    opacity: 1; }
-
-  100% {
-    opacity: 0; } }
-
+  0%, 50%   { opacity: 1}
+  100% { opacity: 0 }
+}
 @keyframes fadeout {
-  0%, 50% {
-    opacity: 1; }
-
-  100% {
-    opacity: 0; } }
+  0%, 50%   { opacity: 1}
+  100% { opacity: 0 }
+}
 
 .messages__msg {
-  -webkit-animation: fadeout 6s ease-in forwards;
-  /* Safari 4+ */
-  animation: fadeout 6s ease-in forwards;
-  /* IE 10+, Fx 29+ */ }
+  -webkit-animation: fadeout 6s ease-in forwards; // Safari 4+
+  animation:         fadeout 6s ease-in forwards; // IE 10+, Fx 29+
+}
 
 .messages__msg:nth-child(1) {
   -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s; }
+  animation-delay: 0.4s;
+}
 
 .messages__msg:nth-child(2) {
   -webkit-animation-delay: 0.8s;
-  animation-delay: 0.8s; }
+  animation-delay: 0.8s;
+}
 
 .messages__msg:nth-child(3) {
   -webkit-animation-delay: 1.2s;
-  animation-delay: 1.2s; }
+  animation-delay: 1.2s;
+}
 
 .messages__msg:nth-child(4) {
   -webkit-animation-delay: 1.6s;
-  animation-delay: 1.6s; }
+  animation-delay: 1.6s;
+}
+*/
