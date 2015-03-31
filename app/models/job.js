@@ -102,9 +102,6 @@ module.exports = function(sequelize, DataTypes) {
                     if (!this.changed()) {
                         // nothing changed
                         throw new utils.errors.noChange();
-                        throw new function() {
-                            this.type = 'nochange';
-                        };
                     }
 
                     if (!this.isNewRecord) {

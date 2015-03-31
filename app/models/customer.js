@@ -43,6 +43,14 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 field: 'address'
             },
+            phoneNumber: {
+                type: DataTypes.STRING,
+                field: 'phoneNumber'
+            },
+            phoneNumber2: {
+                type: DataTypes.STRING,
+                field: 'phoneNumber2'
+            },
             postcode: {
                 type: DataTypes.STRING,
                 field: 'postcode',
@@ -63,7 +71,8 @@ module.exports = function(sequelize, DataTypes) {
                     Customer.belongsTo(models.customer, { foreignKey: "versionOfId" });
                     Customer.belongsTo(models.user, {
                         as : "Editor",
-                        foreignKey: "editedById"
+                        foreignKey: "editedById",
+                        constraints: false
                     });
                 }
             },
@@ -74,9 +83,7 @@ module.exports = function(sequelize, DataTypes) {
                     // @todo sanitise the address. Remove commas, separate onto new lines. trim spaces
                     if (!this.changed()) {
                         // nothing changed
-                        throw new function() {
-                            this.type = 'nochange';
-                        };
+                        throw new utils.errors.noChange();
                     }
 
                     if (!this.isNewRecord) {
@@ -90,7 +97,12 @@ module.exports = function(sequelize, DataTypes) {
                         query = 'insert',
                         args;
 
-                    delete attributes.id; // remove the 'id' field so it can be reset
+                    // remove the 'id' field so it can be reset
+                    delete attributes.id;
+
+                    // delete attributes added via JOIN
+                    delete attributes.Editor;
+
                     attributes.versionOfId = originalId;
 
                     args = [self, self.Model.getTableName(), attributes, {}];

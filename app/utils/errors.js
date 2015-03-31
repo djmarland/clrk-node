@@ -9,12 +9,12 @@ module.exports = function() {
         invalidPostcode : function() {
             this.type = "invalidPostcode";
             this.message = "Not a valid UK postcode in the format EX12 3PL";
-            this.msg = this.message;
+            this.msgPublic = this.message;
         },
         noChange : function() {
             this.type = "nochange";
             this.message = "No changes were made";
-            this.msg = this.message;
+            this.msgPublic = this.message;
             this.msgType = 'info';
         }
     };

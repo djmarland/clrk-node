@@ -137,6 +137,11 @@ module.exports = function(sequelize, DataTypes) {
                     return values;
                 },
                 onSave : function() {
+                    if (!this.changed()) {
+                        // nothing changed
+                        throw new utils.errors.noChange();
+                    }
+
                     if (this.changed('password')) {
                         this.setPassword(this.password);
                     }
