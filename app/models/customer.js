@@ -45,11 +45,25 @@ module.exports = function(sequelize, DataTypes) {
             },
             phoneNumber: {
                 type: DataTypes.STRING,
-                field: 'phoneNumber'
+                field: 'phoneNumber',
+                validate: {
+                    fn: function(val) {
+                        if (val && !utils.phone.isValid(val)) {
+                            throw new utils.errors.invalidPhone();
+                        }
+                    }
+                }
             },
             phoneNumber2: {
                 type: DataTypes.STRING,
-                field: 'phoneNumber2'
+                field: 'phoneNumber2',
+                validate: {
+                    fn: function(val) {
+                        if (val && !utils.phone.isValid(val)) {
+                            throw new utils.errors.invalidPhone();
+                        }
+                    }
+                }
             },
             postcode: {
                 type: DataTypes.STRING,
@@ -71,8 +85,7 @@ module.exports = function(sequelize, DataTypes) {
                     Customer.belongsTo(models.customer, { foreignKey: "versionOfId" });
                     Customer.belongsTo(models.user, {
                         as : "Editor",
-                        foreignKey: "editedById",
-                        constraints: false
+                        foreignKey: "editedById"
                     });
                 }
             },
@@ -96,6 +109,9 @@ module.exports = function(sequelize, DataTypes) {
                         attributes = this._previousDataValues,
                         query = 'insert',
                         args;
+
+                    // ensure the attributes is a clone
+                    attributes = JSON.parse(JSON.stringify(attributes));
 
                     // remove the 'id' field so it can be reset
                     delete attributes.id;
@@ -140,11 +156,25 @@ module.exports = function(sequelize, DataTypes) {
                     fn(null, customer);
                 },
                 afterValidate: function(customer, options, fn) {
-                    var postcode;
+                    var postcode, phone;
                     if (customer.postcode) {
                         postcode = utils.postcode.format(customer.postcode);
                         if (postcode) {
                             customer.setDataValue('postcode',postcode);
+                        }
+                    }
+
+                    if (customer.phoneNumber) {
+                        phone = utils.phone.format(customer.phoneNumber);
+                        if (phone) {
+                            customer.setDataValue('phoneNumber',phone);
+                        }
+                    }
+
+                    if (customer.phoneNumber2) {
+                        phone = utils.phone.format(customer.phoneNumber2);
+                        if (phone) {
+                            customer.setDataValue('phoneNumber2',phone);
                         }
                     }
                     fn(null, customer);

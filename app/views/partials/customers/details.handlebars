@@ -25,23 +25,23 @@
         <div class="input-wrap {{ validationErrors.phoneNumberClass }}">
             <label class="input-label" for="form-phoneNumber">Phone Number</label>
             <input type="text" name="phoneNumber" id="form-phoneNumber" value="{{ phoneNumber }}" />
-            {{#if phoneNumber }}
-            <a href="tel:{{ phoneNumber }}"><i class="fa fa-phone"></i> Call</a>
-            {{/if}}
             {{#if validationErrors.phoneNumber }}
                 <p>{{ validationErrors.phoneNumber }}</p>
             {{/if}}
         </div>
+        {{#if phoneNumber }}
+        <a href="tel:{{ phoneNumber }}"><i class="fa fa-phone"></i> Call</a>
+        {{/if}}
         <div class="input-wrap {{ validationErrors.phoneNumber2Class }}">
             <label class="input-label" for="form-phoneNumber2">Alternate Phone Number</label>
             <input type="text" name="phoneNumber2" id="form-phoneNumber2" value="{{ phoneNumber2 }}" />
-            {{#if phoneNumber2 }}
-                <a href="tel:{{ phoneNumber2 }}"><i class="fa fa-phone"></i> Call</a>
-            {{/if}}
             {{#if validationErrors.phoneNumber2 }}
                 <p>{{ validationErrors.phoneNumber2 }}</p>
             {{/if}}
         </div>
+        {{#if phoneNumber2 }}
+        <a href="tel:{{ phoneNumber2 }}"><i class="fa fa-phone"></i> Call</a>
+        {{/if}}
         <div>
             <button type="submit">Save</button>
         </div>
