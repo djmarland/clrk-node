@@ -40,9 +40,9 @@ module.exports = function() {
                 // asynchronously send the mail
                 transporter.sendMail(mailOptions, function(error, info){
                     if (error){
-                        console.log(error);
+                        console.log(error); // @todo - send to error log
                     } else {
-                        console.log('Message sent: ' + info.response);
+                       // console.log('Message sent: ' + info.response);
                     }
                 });
             } else {

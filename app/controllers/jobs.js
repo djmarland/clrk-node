@@ -83,36 +83,34 @@ exports.showAndEditAction = function (req, res, next) {
 
 
 exports.newAction = function (req, res) {
-    res.render('jobs/new', {
-        jobForm : {
-            action : '/jobs/new',
-            csrfToken : req.csrfToken()
-        }
-    });
-};
-
-exports.createAction = function (req, res, next) {
     var data = {
-            jobForm : req.body
+            form : {
+                action : '/jobs/new'
+            }
         },
         render = function() {
-            data.jobForm.action = '/jobs/new';
-            data.jobForm.csrfToken = req.csrfToken();
-            console.log(data.jobForm.validationErrors);
-            return res.render('jobs/new', data);
+            models.type.getList().then(function(result) {
+                data.types = result;
+                data.form.csrfToken = req.csrfToken()
+                res.render('jobs/new', data);
+            })
+            .catch(function(e) {
+                // @todo - log this
+                res.send('killed');
+            });
         },
         checkCustomer = function(key) {
             models.customer.findByKey(key)
                 .then(function(result) {
                     // all was good
-                    data.jobForm.customerId = result.id;
-                    createJob(data.jobForm);
+                    data.form.customerId = result.id;
+                    createJob(data.form);
                 })
                 .catch(function(err) {
                     // customer didn't exist
-                    data.jobForm.validationErrors = {};
-                    data.jobForm.validationErrors.customerKey = 'No such customer';
-                    data.jobForm.validationErrors.customerKeyClass = 'error';
+                    data.form.validationErrors = {};
+                    data.form.validationErrors.customerKey = 'No such customer';
+                    data.form.validationErrors.customerKeyClass = 'error';
                     res.locals.messages.push({
                         message : 'No such customer',
                         type : 'error'
@@ -125,24 +123,27 @@ exports.createAction = function (req, res, next) {
                 name : fields.customerName,
                 editedById : req.user.id,
                 address : fields.customerAddress,
-                postcode : fields.customerPostcode
+                postcode : fields.customerPostcode,
+                phoneNumber : fields.customerPhoneNumber
             };
             return models.customer.new(customer)
                 .then(function(result) {
                     // all was good
-                    data.jobForm.customerId = result.id;
-                    createJob(data.jobForm);
+                    data.form.customerId = result.id;
+                    createJob(data.form);
                 })
                 .catch(function(err) {
-                    utils.crud.setFormValidationErrors(data.jobForm, res, err, {
+                    utils.crud.setFormValidationErrors(data.form, res, err, {
                         name : 'customerName',
                         address : 'customerAddress',
-                        postcode : 'customerPostcode'
+                        postcode : 'customerPostcode',
+                        phoneNumber : 'customerPhoneNumber'
                     });
                     render();
                 });
         },
         createJob = function(fields) {
+            console.log(fields.typeId);
             return models.job.new(fields)
                 .then(function(result) {
                     // all was good
@@ -154,21 +155,47 @@ exports.createAction = function (req, res, next) {
                     res.redirect(result.url);
                 })
                 .catch(function(err) {
-                    utils.crud.setFormValidationErrors(data.jobForm, res, err);
+                    utils.crud.setFormValidationErrors(data.form, res, err);
                     render();
                 });
         };
 
-    data.jobForm.editedById = req.user.id;
+    if (req.method === 'POST') {
+        data.form = req.body;
+        data.form.editedById = req.user.id;
 
-    // if a customer key was not set
-    // create a customer, and get its ID
-    if (data.jobForm.customerKey) {
-        // check customer exists
-        checkCustomer(data.jobForm.customerKey);
+        // check the typeID, and create a new one if needed
+        if (data.form.typeId == 'new') {
+            if (data.form.newType) {
+
+                // create the type
+                // set the typeID to that type
+                // start customer check
+
+            } else {
+                data.form.validationErrors = {};
+                data.form.validationErrors.newType = 'A type name was not set';
+                data.form.validationErrors.newTypeClass = 'error';
+                res.locals.messages.push({
+                    message : 'A type name was not set',
+                    type : 'error'
+                });
+                return render(); //bail
+            }
+        }
+
+
+        // if a customer key was not set
+        // create a customer, and get its ID
+        if (data.form.customerKey) {
+            // check customer exists
+            checkCustomer(data.form.customerKey);
+        } else {
+            // create a customer
+            createCustomer(data.form);
+        }
     } else {
-        // create a customer
-        createCustomer(data.jobForm);
+        render();
     }
 
 };

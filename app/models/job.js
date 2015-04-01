@@ -64,7 +64,13 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.INTEGER,
                 references : "types",
                 referencesKey : "id",
-                field: "typeId"
+                field: "typeId",
+                allowNull : false,
+                validate: {
+                    notEmpty: {
+                        msg: 'A job type must be set'
+                    }
+                }
             },
             completionDate : {
                 type: DataTypes.DATE

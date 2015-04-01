@@ -3,47 +3,47 @@
 <div class="job-form" style="max-width: 580px">
     <form action="{{ action }}" method="post">
 
-        <input type="hidden" name="_csrf" value="{{ jobForm.csrfToken }}" />
+        <input type="hidden" name="_csrf" value="{{ form.csrfToken }}" />
 
 
         <h2>Customer details</h2>
-        <div class="input-wrap {{ jobForm.validationErrors.customerKeyClass }}">
+        <div class="input-wrap {{ form.validationErrors.customerKeyClass }}">
             <label class="input-label" for="form-customerKey">Customer key</label>
-            <input type="text" name="customerKey" id="form-customerKey" value="{{ jobForm.customerKey }}" />
-            {{#if jobForm.validationErrors.customerKey }}
-            <p>{{ jobForm.validationErrors.customerKey }}</p>
+            <input type="text" name="customerKey" id="form-customerKey" value="{{ form.customerKey }}" />
+            {{#if form.validationErrors.customerKey }}
+            <p>{{ form.validationErrors.customerKey }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.customerNameClass }}">
+        <div class="input-wrap {{ form.validationErrors.customerNameClass }}">
             <label class="input-label" for="form-customerName">Customer Name</label>
-            <input class="input-head" required="true" type="text" name="customerName" id="form-customerName" value="{{ jobForm.customerName }}" />
-            {{#if jobForm.validationErrors.customerName }}
-            <p>{{ jobForm.validationErrors.customerName }}</p>
+            <input class="input-head" required="true" type="text" name="customerName" id="form-customerName" value="{{ form.customerName }}" />
+            {{#if form.validationErrors.customerName }}
+            <p>{{ form.validationErrors.customerName }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.customerAddressClass }}">
+        <div class="input-wrap {{ form.validationErrors.customerAddressClass }}">
             <label class="input-label" for="form-customerAddress">Customer Address</label>
-            <textarea name="customerAddress" id="form-customerAddress">{{ jobForm.customerAddress }}</textarea>
-            {{#if jobForm.validationErrors.customerAddress }}
-            <p>{{ jobForm.validationErrors.customerAddress }}</p>
+            <textarea name="customerAddress" id="form-customerAddress">{{ form.customerAddress }}</textarea>
+            {{#if form.validationErrors.customerAddress }}
+            <p>{{ form.validationErrors.customerAddress }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.customerPostcodeClass }}">
+        <div class="input-wrap {{ form.validationErrors.customerPostcodeClass }}">
             <label class="input-label" for="form-customerPostcode">Customer Postcode</label>
-            <input type="text" name="customerPostcode" id="form-customerPostcode" value="{{ jobForm.customerPostcode }}" />
-            {{#if jobForm.validationErrors.customerPostcode }}
-            <p>{{ jobForm.validationErrors.customerPostcode }}</p>
+            <input type="text" name="customerPostcode" id="form-customerPostcode" value="{{ form.customerPostcode }}" />
+            {{#if form.validationErrors.customerPostcode }}
+            <p>{{ form.validationErrors.customerPostcode }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.customerTelephoneClass }}">
-            <label class="input-label" for="form-customerTelephone">Customer phone number</label>
-            <input type="text" name="customerTelephone" id="form-customerTelephone" value="{{ jobForm.customerTelephone }}" />
-            {{#if jobForm.validationErrors.customerTelephone }}
-            <p>{{ jobForm.validationErrors.customerTelephone }}</p>
+        <div class="input-wrap {{ form.validationErrors.customerPhoneNumberClass }}">
+            <label class="input-label" for="form-customerPhoneNumber">Customer phone number</label>
+            <input type="text" name="customerPhoneNumber" id="form-customerPhoneNumber" value="{{ form.customerPhoneNumber }}" />
+            {{#if form.validationErrors.customerPhoneNumber }}
+            <p>{{ form.validationErrors.customerPhoneNumber }}</p>
             {{/if}}
         </div>
         <!-- Entering a name, address or postcode should start searching customers for you to choose
@@ -51,47 +51,47 @@
 
         <h2>Job Details</h2>
 
-        <div class="input-wrap {{ jobForm.validationErrors.addressClass }}">
+        <div class="input-wrap {{ form.validationErrors.addressClass }}">
             <label class="input-label" for="form-address">Job Address</label>
-            <textarea name="address" id="form-address">{{ jobForm.address }}</textarea>
-            {{#if jobForm.validationErrors.address }}
-            <p>{{ jobForm.validationErrors.address }}</p>
+            <textarea name="address" id="form-address">{{ form.address }}</textarea>
+            {{#if form.validationErrors.address }}
+            <p>{{ form.validationErrors.address }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.postcodeClass }}">
+        <div class="input-wrap {{ form.validationErrors.postcodeClass }}">
             <label class="input-label" for="form-postcode">Job Postcode</label>
-            <input type="text" name="postcode" id="form-postcode" value="{{ jobForm.postcode }}" />
-            {{#if jobForm.validationErrors.postcode }}
-            <p>{{ jobForm.validationErrors.postcode }}</p>
+            <input type="text" name="postcode" id="form-postcode" value="{{ form.postcode }}" />
+            {{#if form.validationErrors.postcode }}
+            <p>{{ form.validationErrors.postcode }}</p>
             {{/if}}
         </div>
 
         <hr />
 
         <h2>Job details</h2>
-        <div class="input-wrap {{ jobForm.validationErrors.typeIdClass }}">
-            <label class="input-label" required="true" for="form-typeId">Type ID</label>
-            <input type="text" name="typeId" id="form-typeId" value="{{ jobForm.typeId }}" />
-            {{#if jobForm.validationErrors.typeId }}
-            <p>{{ jobForm.validationErrors.typeId }}</p>
-            {{/if}}
+
+        <h3>Job type</h3>
+        {{> generic/types this }}
+        <div class="input-wrap {{ form.validationErrors.typeIdClass }}">
+            <label class="input-label" for="form-typeIdNew">New (enter in field provided)</label>
+            <input type="radio" id="form-typeIdNew" name="typeId" value="new" {{ setChecked 'new' form.typeId }}>
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.newTypeClass }}">
+        <div class="input-wrap {{ form.validationErrors.newTypeClass }}">
             <label class="input-label" for="form-newType">New type</label>
-            <input type="text" name="newType" id="form-newType" value="{{ jobForm.newType }}" />
-            {{#if jobForm.validationErrors.newType }}
-            <p>{{ jobForm.validationErrors.newType }}</p>
+            <input type="text" name="newType" id="form-newType" value="{{ form.newType }}" />
+            {{#if form.validationErrors.newType }}
+            <p>{{ form.validationErrors.newType }}</p>
             {{/if}}
         </div>
         <!-- choosing a type will pre-fill the title field -->
 
-        <div class="input-wrap {{ jobForm.validationErrors.titleClass }}">
+        <div class="input-wrap {{ form.validationErrors.titleClass }}">
             <label class="input-label" for="form-title">Title</label>
-            <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ jobForm.title }}" />
-            {{#if jobForm.validationErrors.title }}
-            <p>{{ jobForm.validationErrors.title }}</p>
+            <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ form.title }}" />
+            {{#if form.validationErrors.title }}
+            <p>{{ form.validationErrors.title }}</p>
             {{/if}}
         </div>
 
@@ -104,35 +104,35 @@
         <!-- should be replaced with a simple interface -->
 
 
-        <div class="input-wrap {{ jobForm.validationErrors.scheduledStartDateClass }}">
+        <div class="input-wrap {{ form.validationErrors.scheduledStartDateClass }}">
             <label class="input-label" for="form-scheduledStartDate">Scheduled start Date</label>
-            <input type="date" name="scheduledStartDate" id="form-scheduledStartDate" value="{{ jobForm.scheduledStartDate }}" />
-            {{#if jobForm.validationErrors.scheduledStartDate }}
-            <p>{{ jobForm.validationErrors.scheduledStartDate }}</p>
+            <input type="date" name="scheduledStartDate" id="form-scheduledStartDate" value="{{ form.scheduledStartDate }}" />
+            {{#if form.validationErrors.scheduledStartDate }}
+            <p>{{ form.validationErrors.scheduledStartDate }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.scheduledStartTimeClass }}">
+        <div class="input-wrap {{ form.validationErrors.scheduledStartTimeClass }}">
             <label class="input-label" for="form-scheduledStartTime">Scheduled start Time</label>
-            <input type="time" name="scheduledStartTime" id="form-scheduledStartTime" value="{{ jobForm.scheduledStartTime }}" />
-            {{#if jobForm.validationErrors.scheduledStartTime }}
-            <p>{{ jobForm.validationErrors.scheduledStartTime }}</p>
+            <input type="time" name="scheduledStartTime" id="form-scheduledStartTime" value="{{ form.scheduledStartTime }}" />
+            {{#if form.validationErrors.scheduledStartTime }}
+            <p>{{ form.validationErrors.scheduledStartTime }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.scheduledEndDateClass }}">
+        <div class="input-wrap {{ form.validationErrors.scheduledEndDateClass }}">
             <label class="input-label" for="form-scheduledEndDate">Scheduled end Date</label>
-            <input type="date" name="scheduledEndDate" id="form-scheduledEndDate" value="{{ jobForm.scheduledEndDate }}" />
-            {{#if jobForm.validationErrors.scheduledEndDate }}
-            <p>{{ jobForm.validationErrors.scheduledEndDate }}</p>
+            <input type="date" name="scheduledEndDate" id="form-scheduledEndDate" value="{{ form.scheduledEndDate }}" />
+            {{#if form.validationErrors.scheduledEndDate }}
+            <p>{{ form.validationErrors.scheduledEndDate }}</p>
             {{/if}}
         </div>
 
-        <div class="input-wrap {{ jobForm.validationErrors.scheduledEndTimeClass }}">
+        <div class="input-wrap {{ form.validationErrors.scheduledEndTimeClass }}">
             <label class="input-label" for="form-scheduledEndTime">Scheduled end Time</label>
-            <input type="time" name="scheduledEndTime" id="form-scheduledEndTime" value="{{ jobForm.scheduledEndTime }}" />
-            {{#if jobForm.validationErrors.scheduledEndTime }}
-            <p>{{ jobForm.validationErrors.scheduledEndTime }}</p>
+            <input type="time" name="scheduledEndTime" id="form-scheduledEndTime" value="{{ form.scheduledEndTime }}" />
+            {{#if form.validationErrors.scheduledEndTime }}
+            <p>{{ form.validationErrors.scheduledEndTime }}</p>
             {{/if}}
         </div>
 

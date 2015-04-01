@@ -32,5 +32,18 @@ module.exports = function(sequelize, DataTypes) {
         }
     );
 
+    Type.getList = function() {
+        return new sequelize.Promise(function(resolve, reject) {
+            Type.findAll({
+                order : "title ASC"
+            })
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(e) {
+                    reject(Error("It died " + e.message));
+                });
+        });
+    };
+
     return Type;
 };
