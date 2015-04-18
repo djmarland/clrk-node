@@ -91,13 +91,24 @@ exports.newAction = function (req, res) {
         render = function() {
             models.type.getList().then(function(result) {
                 data.types = result;
-                data.form.csrfToken = req.csrfToken()
+                data.form.csrfToken = req.csrfToken();
                 res.render('jobs/new', data);
             })
             .catch(function(e) {
                 // @todo - log this
                 res.send('killed');
             });
+        },
+        beginCustomerCheck = function() {
+            // if a customer key was not set
+            // create a customer, and get its ID
+            if (data.form.customerKey) {
+                // check customer exists
+                checkCustomer(data.form.customerKey);
+            } else {
+                // create a customer
+                createCustomer(data.form);
+            }
         },
         checkCustomer = function(key) {
             models.customer.findByKey(key)
@@ -169,9 +180,20 @@ exports.newAction = function (req, res) {
             if (data.form.newType) {
 
                 // create the type
-                // set the typeID to that type
-                // start customer check
+                models.type.newTitle(data.form.newType)
+                    .then(function(result) {
 
+                        // set the typeID to that type
+                        data.form.typeId = result.id;
+
+                        // start customer check
+                        beginCustomerCheck();
+
+                    })
+                    .catch(function(err) {
+                        utils.crud.setFormValidationErrors(data.form, res, err);
+                        render();
+                    });
             } else {
                 data.form.validationErrors = {};
                 data.form.validationErrors.newType = 'A type name was not set';
@@ -182,20 +204,92 @@ exports.newAction = function (req, res) {
                 });
                 return render(); //bail
             }
-        }
-
-
-        // if a customer key was not set
-        // create a customer, and get its ID
-        if (data.form.customerKey) {
-            // check customer exists
-            checkCustomer(data.form.customerKey);
         } else {
-            // create a customer
-            createCustomer(data.form);
+            beginCustomerCheck();
         }
     } else {
         render();
     }
 
 };
+
+exports.changeTypeAction = function (req, res) {
+    var data = {
+            job : req.job,
+            form : {
+                action : '/jobs/change-type'
+            }
+        },
+        updateJob = function() {
+            data.job.save()
+                .then(function(result) {
+                    // all was good
+                    res.locals.messages.push({
+                        message : 'Job type was updated successfully',
+                        type : "success"
+                    });
+                    render();
+                })
+                .catch(function(err) {
+                    utils.crud.setFormValidationErrors(data.form, res, err);
+                    render();
+                });
+        },
+        render = function() {
+            models.type.getList().then(function(result) {
+                data.jobTypes = result.rows;
+                data.form.csrfToken = req.csrfToken();
+                res.render('jobs/change-type', data);
+            })
+                .catch(function(e) {
+                    // @todo - log this
+                    res.send('killed');
+                });
+        };
+
+    data.form.typeId = req.job.typeId;
+
+    if (req.method === 'POST') {
+        data.form = req.body;
+
+        // check the typeID, and create a new one if needed
+        if (data.form.typeId == 'new') {
+            if (data.form.newType) {
+
+                // create the type
+                models.type.newTitle(data.form.newType)
+                    .then(function(result) {
+
+                        // set the typeID to that type
+                        data.job.typeId = result.id;
+
+                        // set the form and clear it
+                        data.form.typeId = result.id;
+                        data.form.newType = '';
+
+                        updateJob();
+
+                    })
+                    .catch(function(err) {
+                        utils.crud.setFormValidationErrors(data.form, res, err);
+                        render();
+                    });
+            } else {
+                data.form.validationErrors = {};
+                data.form.validationErrors.newType = 'A type name was not set';
+                data.form.validationErrors.newTypeClass = 'error';
+                res.locals.messages.push({
+                    message : 'A type name was not set',
+                    type : 'error'
+                });
+                return render(); //bail
+            }
+        } else {
+            data.job.typeId = data.form.typeId;
+            updateJob();
+        }
+    } else {
+        render();
+    }
+
+}

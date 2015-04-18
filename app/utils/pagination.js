@@ -124,7 +124,7 @@ module.exports = function() {
                 }
             },
             isOutOfRange : function() {
-                // only out of range if you asked for a page size greater than 1
+                // only out of range if you asked for a page number greater than 1
                 // and that means more than the total
                 return ((this.currentPage > 1) && (this.currentPage > this.totalPages));
             }

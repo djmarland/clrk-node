@@ -10,6 +10,7 @@ var home        = require('controllers/home'),
     customers   = require('controllers/customers'),
     users       = require('controllers/users'),
     jobs        = require('controllers/jobs'),
+    types       = require('controllers/types'),
 
 
     models      = require('models');
@@ -271,6 +272,7 @@ module.exports = function (app) {
  //   app.get('/jobs/search.:format?', jobs.searchAction);
  //   app.post('/jobs/search', jobs.searchPostAction);
     app.all('/jobs/:jobKey.:format?', jobs.showAndEditAction);
+    app.all('/jobs/:jobKey/change-type?', jobs.changeTypeAction);
  //   app.get('/jobs/:jobKey/versions.:format?', jobs.versionsListAction);
  //   app.get('/jobs/:jobKey/versions/:versionKey.:format?', jobs.versionsShowAction);
 
@@ -302,7 +304,29 @@ module.exports = function (app) {
             .catch(next);
     });
 
+    /**
+     * Types routes
+     */
+    app.all('/job-types.:format?', types.listAction);
+    app.all('/job-types/:typeId.:format?', types.showAndEditAction); // doesn't need a special key
+    app.all('/job-types/:typeId/delete', types.deleteAction);
 
+    app.param('typeId', function(req, res, next, typeId) {
+
+        return models.type.findById(typeId)
+            .then(function(jobType) {
+                if (!jobType) {
+                    var err = new Error;
+                    err.message = 'No such job type';
+                    err.status = 404;
+                    return next(err);
+                }
+
+                req.jobType = jobType;
+                return next();
+            })
+            .catch(next);
+    });
 
     /**
      * Recognise the formats

@@ -33,7 +33,7 @@ input, textarea {
   width: 100%;
   font-family: $font-family-global;
   background: transparent;
-  padding: $spacing-default 64px $spacing-default $spacing-default;
+  padding: $spacing-half 64px $spacing-half $spacing-half;
 
 }
 
@@ -48,12 +48,12 @@ input, textarea {
 }
 .input-wrap {
   position: relative;
-  margin-bottom: $spacing-double;
+  margin-bottom: $spacing-default;
 }
 .input-label {
   position: absolute;
-  bottom: $spacing-half;
-  right: $spacing-default;
+  bottom: $spacing-tiny;
+  right: $spacing-half;
   font-size: 14px;
   color: $color-keyline;
 }
@@ -135,7 +135,7 @@ input, textarea {
 .table--summary th,
 .table--summary td {
   text-align: left;
-  padding: $spacing-default $spacing-half;
+  padding: $spacing-half $spacing-tiny;
   border-bottom: solid 1px #666;
 }
 .table--summary tbody tr:hover {
@@ -147,9 +147,11 @@ input, textarea {
 }
 
 .table__onward {
-  width: $spacing-double;
+  width: $spacing-default;
+  text-align: center;
 }
 
+// pagination
 .pg {
   text-align: center;
   margin: $spacing-default 0;

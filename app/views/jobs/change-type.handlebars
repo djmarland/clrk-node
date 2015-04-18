@@ -1,0 +1,30 @@
+<h1>Change Job Type</h1>
+<p>This page lets you change the currently set job type.</p>
+<p><a href="{{ job.url }}">Back to job</a></p>
+
+<div class="job-form">
+    <form action="{{ action }}" method="post">
+
+        <input type="hidden" name="_csrf" value="{{ form.csrfToken }}" />
+
+
+        {{> generic/types this }}
+        <div class="input-wrap {{ form.validationErrors.typeIdClass }}">
+            <label class="input-label" for="form-typeIdNew">New (enter in field provided)</label>
+            <input type="radio" id="form-typeIdNew" name="typeId" value="new" {{ setChecked 'new' form.typeId }}>
+        </div>
+
+        <div class="input-wrap {{ form.validationErrors.newTypeClass }}">
+            <label class="input-label" for="form-newType">New type</label>
+            <input type="text" name="newType" id="form-newType" value="{{ form.newType }}" />
+            {{#if form.validationErrors.newType }}
+            <p>{{ form.validationErrors.newType }}</p>
+            {{/if}}
+        </div>
+
+
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>

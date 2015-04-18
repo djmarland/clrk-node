@@ -1,0 +1,14 @@
+<h1>Delete {{ jobType.title }}</h1>
+<p>In order to delete this job type you need to choose a replacement job type.
+All jobs that are currently allocated to <strong>{{ jobType.title }}</strong> will be
+moved to that job type (if there are any).</p>
+
+<form action="{{ action }}" method="post">
+
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+    {{> generic/types this }}
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>

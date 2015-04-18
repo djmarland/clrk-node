@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #31363D;
-  background: #FFFFFF; }
+  color: #EEF1FF;
+  background: #31363D; }
 
 .a, h1 {
   font-size: 32px;
@@ -384,14 +384,14 @@ p {
 /* Grid */
 .grid {
   display: block;
-  margin-left: -24px;
+  margin-left: -12px;
   letter-spacing: -0.31em;
   /* webkit */
   *letter-spacing: normal;
   /* reset IE < 8 */
   word-spacing: -0.43em;
   /* IE < 8 && gecko */
-  margin-bottom: 24px; }
+  margin-bottom: 12px; }
 
 .grid:before, .grid:after {
   display: table;
@@ -407,7 +407,7 @@ p {
   width: 100%;
   letter-spacing: normal;
   word-spacing: normal;
-  padding-left: 24px; }
+  padding-left: 12px; }
 
 .fr-1\/1 {
   width: 100%; }
@@ -516,30 +516,30 @@ p {
     width: 16.66666667%; } }
 
 pre {
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 12px;
+  margin-bottom: 12px;
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.3); }
 
 .h-box, blockquote {
-  background: #CF2E2E;
-  color: #FFFFFF;
-  padding: 24px; }
+  background: #F9B53A;
+  color: #31363D;
+  padding: 12px; }
 
 .h-color {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 .h-bg {
-  background: #CF2E2E; }
+  background: #F9B53A; }
 
 input, textarea {
-  color: #31363D; }
+  color: #EEF1FF; }
 
 a {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 input, textarea {
-  border: solid 1px #ddd;
+  border: solid 1px #444;
   border-bottom-color: #999999;
   width: 100%;
   font-family: sans-serif;
@@ -574,20 +574,20 @@ input, textarea {
 
 .messages {
   position: absolute;
-  top: 24px;
-  left: 24px;
-  right: 24px;
+  top: 12px;
+  left: 12px;
+  right: 12px;
   list-style: none;
-  margin: 0 0 48px 0;
+  margin: 0 0 24px 0;
   padding: 0; }
 
 .messages__msg {
-  padding: 24px 18px;
+  padding: 12px 18px;
   border: none;
-  margin-bottom: 12px; }
+  margin-bottom: 6px; }
 
 .messages__msg:before {
-  margin-right: 24px;
+  margin-right: 12px;
   font-weight: bold; }
 
 .messages__msg--info {
@@ -641,12 +641,11 @@ input, textarea {
   background: #585868; }
 
 .table__onward {
-  width: 24px;
-  text-align: center; }
+  width: 24px; }
 
 .pg {
   text-align: center;
-  margin: 24px 0; }
+  margin: 12px 0; }
 
 .pg__list {
   list-style: none;
@@ -659,7 +658,7 @@ input, textarea {
   background: #222;
   color: #fff;
   border: solid 1px #555555;
-  padding: 24px;
+  padding: 12px;
   cursor: pointer; }
 
 button, .btn:hover, .btn:active, .btn:focus {

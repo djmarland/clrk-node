@@ -544,7 +544,7 @@ input, textarea {
   width: 100%;
   font-family: sans-serif;
   background: transparent;
-  padding: 12px 64px 12px 12px; }
+  padding: 24px 64px 24px 24px; }
 
 .input-wrap textarea {
   resize: none;
@@ -556,12 +556,12 @@ input, textarea {
 
 .input-wrap {
   position: relative;
-  margin-bottom: 24px; }
+  margin-bottom: 48px; }
 
 .input-label {
   position: absolute;
-  bottom: 6px;
-  right: 12px;
+  bottom: 12px;
+  right: 24px;
   font-size: 14px;
   color: #999999; }
 
@@ -641,8 +641,7 @@ input, textarea {
   background: #585868; }
 
 .table__onward {
-  width: 24px;
-  text-align: center; }
+  width: 48px; }
 
 .pg {
   text-align: center;

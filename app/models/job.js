@@ -204,6 +204,21 @@ module.exports = function(sequelize, DataTypes) {
         });
     };
 
+    Job.findLatestByType = function(type) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Job.findAndCountAll({
+                where: ["\"typeId\" = ?", type.id],
+                offset: 0,
+                limit: 10,
+                order: '\"updatedAt\" DESC'
+            })
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(e) {
+                    reject(Error("It died " + e.message));
+                });
+        });
+    };
 
     Job.findLatest = function(perPage, page) {
         var perPage = perPage || 10;
@@ -266,6 +281,23 @@ module.exports = function(sequelize, DataTypes) {
     Job.new = function(data) {
         return new sequelize.Promise(function(resolve, reject) {
             Job.create(data)
+                .then(function(job) {
+                    resolve(job);
+                }).catch(function(e) {
+                    reject(e)
+                });
+        });
+    };
+
+    Job.updateTypes = function(oldId, newId) {
+        return new sequelize.Promise(function(resolve, reject) {
+            Job.update({
+                typeId : newId
+            },{
+                where: {
+                    typeId: oldId
+                }
+            })
                 .then(function(job) {
                     resolve(job);
                 }).catch(function(e) {

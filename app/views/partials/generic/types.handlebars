@@ -1,4 +1,4 @@
-{{#each types }}
+{{#each jobTypes }}
 <div class="input-wrap {{ form.validationErrors.typeIdClass }}">
     <label class="input-label" for="form-typeId{{this.id}}">{{ this.title }}</label>
     <input type="radio" id="form-typeId{{this.id}}" name="typeId" value="{{this.id}}" {{ setChecked ../form.typeId this.id }}>

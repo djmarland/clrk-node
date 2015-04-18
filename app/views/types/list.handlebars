@@ -1,0 +1,52 @@
+<h1>Job types</h1>
+
+<div class="grid"><!--
+--><div class="g fr-1/2" data-resultset data-resultsetnext="{{ pagination.nextPage }}">
+    {{#if jobTypes }}
+        <table class="table--summary">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th class="table__onward">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody data-source="job-types">
+            {{#each jobTypes}}
+                <tr onclick="window.location.href = '{{ url }}'">
+                    <td><a href="{{ url }}">{{ title }}</a></td>
+                    <td class="table__onward">
+                        {{#if ../deletable }}
+                        <a href="{{ url }}/delete"><i class="fa fa-times"></i></a>
+                        {{/if}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{> generic/paginator pagination }}
+    {{else}}
+    <p>No job types were found</p>
+    {{/if}}
+</div><!--
+
+--><div class="g fr-1/2">
+<h2>Add new job type</h2>
+    <form action="{{ action }}" method="post">
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <div class="input-wrap {{ form.validationErrors.titleClass }}">
+            <label class="input-label" for="form-title">Title</label>
+            <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ form.title }}" />
+            {{#if form.validationErrors.title }}
+            <p>{{ form.validationErrors.title }}</p>
+            {{/if}}
+        </div>
+
+
+
+        <div>
+            <button type="submit">Create</button>
+        </div>
+    </form>
+</div><!--
+--></div>

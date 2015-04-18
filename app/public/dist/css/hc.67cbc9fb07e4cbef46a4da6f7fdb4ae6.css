@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #31363D;
-  background: #FFFFFF; }
+  color: #FFDE00;
+  background: #111; }
 
 .a, h1 {
   font-size: 32px;
@@ -522,29 +522,29 @@ pre {
   background-color: rgba(0, 0, 0, 0.3); }
 
 .h-box, blockquote {
-  background: #CF2E2E;
-  color: #FFFFFF;
+  background: #00eeff;
+  color: #111;
   padding: 24px; }
 
 .h-color {
-  color: #CF2E2E; }
+  color: #00eeff; }
 
 .h-bg {
-  background: #CF2E2E; }
+  background: #00eeff; }
 
 input, textarea {
-  color: #31363D; }
+  color: #FFDE00; }
 
 a {
-  color: #CF2E2E; }
+  color: #01e9ff; }
 
 input, textarea {
-  border: solid 1px #ddd;
-  border-bottom-color: #999999;
+  border: solid 1px #dbdbdb;
+  border-bottom-color: #ffffff;
   width: 100%;
   font-family: sans-serif;
   background: transparent;
-  padding: 12px 64px 12px 12px; }
+  padding: 24px 64px 24px 24px; }
 
 .input-wrap textarea {
   resize: none;
@@ -556,14 +556,14 @@ input, textarea {
 
 .input-wrap {
   position: relative;
-  margin-bottom: 24px; }
+  margin-bottom: 48px; }
 
 .input-label {
   position: absolute;
-  bottom: 6px;
-  right: 12px;
+  bottom: 12px;
+  right: 24px;
   font-size: 14px;
-  color: #999999; }
+  color: #ffffff; }
 
 .customer-form {
   max-width: 500px; }
@@ -641,8 +641,7 @@ input, textarea {
   background: #585868; }
 
 .table__onward {
-  width: 24px;
-  text-align: center; }
+  width: 48px; }
 
 .pg {
   text-align: center;

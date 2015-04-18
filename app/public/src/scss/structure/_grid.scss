@@ -26,60 +26,63 @@
   word-spacing: normal;
   padding-left: $spacing-default;
 }
-.g-1-1 { width: (1/1) * 100%;}
-.g-1-2 { width: (1/2) * 100%;}
-.g-1-3 { width: (1/3) * 100%;}
-.g-2-3 { width: (2/3) * 100%;}
-.g-1-4 { width: (1/4) * 100%;}
-.g-3-4 { width: (3/4) * 100%;}
-.g-1-6 { width: (1/6) * 100%;}
+
+// .fr fractions
+// Used like <div class="fr-1/2">
+.fr-1\/1 { width: (1/1) * 100%;}
+.fr-1\/2 { width: (1/2) * 100%;}
+.fr-1\/3 { width: (1/3) * 100%;}
+.fr-2\/3 { width: (2/3) * 100%;}
+.fr-1\/4 { width: (1/4) * 100%;}
+.fr-3\/4 { width: (3/4) * 100%;}
+.fr-1\/6 { width: (1/6) * 100%;}
 
 @media all and (min-width: px-to-em(320)) { /* 320px */
-  .g-xs-1-1 { width: (1/1) * 100%;}
-  .g-xs-1-2 { width: (1/2) * 100%;}
-  .g-xs-1-3 { width: (1/3) * 100%;}
-  .g-xs-2-3 { width: (2/3) * 100%;}
-  .g-xs-1-4 { width: (1/4) * 100%;}
-  .g-xs-3-4 { width: (3/4) * 100%;}
-  .g-xs-1-6 { width: (1/6) * 100%;}
+  .fr-xs-1\/1 { width: (1/1) * 100%;}
+  .fr-xs-1\/2 { width: (1/2) * 100%;}
+  .fr-xs-1\/3 { width: (1/3) * 100%;}
+  .fr-xs-2\/3 { width: (2/3) * 100%;}
+  .fr-xs-1\/4 { width: (1/4) * 100%;}
+  .fr-xs-3\/4 { width: (3/4) * 100%;}
+  .fr-xs-1\/6 { width: (1/6) * 100%;}
 }
 
 @media all and (min-width: px-to-em(480)) { /* 480px */
-  .g-s-1-1 { width: (1/1) * 100%;}
-  .g-s-1-2 { width: (1/2) * 100%;}
-  .g-s-1-3 { width: (1/3) * 100%;}
-  .g-s-2-3 { width: (2/3) * 100%;}
-  .g-s-1-4 { width: (1/4) * 100%;}
-  .g-s-3-4 { width: (3/4) * 100%;}
-  .g-s-1-6 { width: (1/6) * 100%;}
+  .fr-s-1\/1 { width: (1/1) * 100%;}
+  .fr-s-1\/2 { width: (1/2) * 100%;}
+  .fr-s-1\/3 { width: (1/3) * 100%;}
+  .fr-s-2\/3 { width: (2/3) * 100%;}
+  .fr-s-1\/4 { width: (1/4) * 100%;}
+  .fr-s-3\/4 { width: (3/4) * 100%;}
+  .fr-s-1\/6 { width: (1/6) * 100%;}
 }
 
 @media all and (min-width: px-to-em(600)) { /* 600px */
-  .g-m-1-1 { width: (1/1) * 100%;}
-  .g-m-1-2 { width: (1/2) * 100%;}
-  .g-m-1-3 { width: (1/3) * 100%;}
-  .g-m-2-3 { width: (2/3) * 100%;}
-  .g-m-1-4 { width: (1/4) * 100%;}
-  .g-m-3-4 { width: (3/4) * 100%;}
-  .g-m-1-6 { width: (1/6) * 100%;}
+  .fr-m-1\/1 { width: (1/1) * 100%;}
+  .fr-m-1\/2 { width: (1/2) * 100%;}
+  .fr-m-1\/3 { width: (1/3) * 100%;}
+  .fr-m-2\/3 { width: (2/3) * 100%;}
+  .fr-m-1\/4 { width: (1/4) * 100%;}
+  .fr-m-3\/4 { width: (3/4) * 100%;}
+  .fr-m-1\/6 { width: (1/6) * 100%;}
 }
 
 @media all and (min-width: px-to-em(768)) { /* 768px */
-  .g-l-1-1 { width: (1/1) * 100%;}
-  .g-l-1-2 { width: (1/2) * 100%;}
-  .g-l-1-3 { width: (1/3) * 100%;}
-  .g-l-2-3 { width: (2/3) * 100%;}
-  .g-l-1-4 { width: (1/4) * 100%;}
-  .g-l-3-4 { width: (3/4) * 100%;}
-  .g-l-1-6 { width: (1/6) * 100%;}
+  .fr-l-1\/1 { width: (1/1) * 100%;}
+  .fr-l-1\/2 { width: (1/2) * 100%;}
+  .fr-l-1\/3 { width: (1/3) * 100%;}
+  .fr-l-2\/3 { width: (2/3) * 100%;}
+  .fr-l-1\/4 { width: (1/4) * 100%;}
+  .fr-l-3\/4 { width: (3/4) * 100%;}
+  .fr-l-1\/6 { width: (1/6) * 100%;}
 }
 
 @media all and (min-width: px-to-em(976)) { /* 976px */
-  .g-xl-1-1 { width: (1/1) * 100%;}
-  .g-xl-1-2 { width: (1/2) * 100%;}
-  .g-xl-1-3 { width: (1/3) * 100%;}
-  .g-xl-2-3 { width: (2/3) * 100%;}
-  .g-xl-1-4 { width: (1/4) * 100%;}
-  .g-xl-3-4 { width: (3/4) * 100%;}
-  .g-xl-1-6 { width: (1/6) * 100%;}
+  .fr-xl-1\/1 { width: (1/1) * 100%;}
+  .fr-xl-1\/2 { width: (1/2) * 100%;}
+  .fr-xl-1\/3 { width: (1/3) * 100%;}
+  .fr-xl-2\/3 { width: (2/3) * 100%;}
+  .fr-xl-1\/4 { width: (1/4) * 100%;}
+  .fr-xl-3\/4 { width: (3/4) * 100%;}
+  .fr-xl-1\/6 { width: (1/6) * 100%;}
 }

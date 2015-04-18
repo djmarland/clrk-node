@@ -51,6 +51,13 @@ exports.showAndEditAction = function (req, res, next) {
             data.customerForm.csrfToken = req.csrfToken();
             data.hasEditRights = true;
             if (req.format == 'json') {
+                // remove sensitive data
+                delete data.customerForm;
+                // it would be preferable to display this,
+                // but sequelize is not sanitising the JSON of JOINED objects,
+                // so the password hash becomes visible
+                delete data.customer.Editor;
+                console.log(data.customer.Editor);
                 res.json(data);
             } else {
                 res.render('customers/show', data);

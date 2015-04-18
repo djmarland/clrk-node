@@ -1,0 +1,34 @@
+<h1>Job type: {{ jobType.title }}</h1>
+
+<div class="grid">
+    <div class="g fr-xl-1/2">
+        <h2>Rename</h2>
+        <div class="jobType-form">
+            <form action="{{ action }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <div class="input-wrap {{ form.validationErrors.titleClass }}">
+                    <label class="input-label" for="form-title">Title</label>
+                    <input class="input-head" type="text" required="true" name="title" id="form-title" value="{{ form.title }}" />
+                    {{#if form.validationErrors.title }}
+                    <p>{{ form.validationErrors.title }}</p>
+                    {{/if}}
+                </div>
+                <div>
+                    <button type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="g fr-xl-1/2">
+        <a href="{{ jobType.url }}/delete">Delete this job type</a>
+    </div>
+    <div class="g fr-xl-1/1">
+        <h2>Latest <strong>{{ jobType.title }}</strong> jobs</h2>
+        <p>Total: {{ jobsCount }}</p>
+        <ul>
+            {{#each latestJobs}}
+            <li>{{> job this }}</li>
+            {{/each}}
+        </ul>
+    </div>
+</div>

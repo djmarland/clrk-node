@@ -328,8 +328,8 @@ html {
 
 body {
   padding: 48px;
-  color: #31363D;
-  background: #FFFFFF; }
+  color: #EEF1FF;
+  background: #31363D; }
 
 .a, h1 {
   font-size: 32px;
@@ -522,24 +522,24 @@ pre {
   background-color: rgba(0, 0, 0, 0.3); }
 
 .h-box, blockquote {
-  background: #CF2E2E;
-  color: #FFFFFF;
+  background: #F9B53A;
+  color: #31363D;
   padding: 24px; }
 
 .h-color {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 .h-bg {
-  background: #CF2E2E; }
+  background: #F9B53A; }
 
 input, textarea {
-  color: #31363D; }
+  color: #EEF1FF; }
 
 a {
-  color: #CF2E2E; }
+  color: #F9B53A; }
 
 input, textarea {
-  border: solid 1px #ddd;
+  border: solid 1px #444;
   border-bottom-color: #999999;
   width: 100%;
   font-family: sans-serif;
@@ -556,7 +556,7 @@ input, textarea {
 
 .input-wrap {
   position: relative;
-  margin-bottom: 24px; }
+  margin-bottom: 48px; }
 
 .input-label {
   position: absolute;
